@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="联系云忍者 — 有问题？随时告诉我们。邮箱、微信、GitHub 等多种联系方式。">
+    <title>联系我们 | 云忍者</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Contact 页面专属样式 */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto 56px;
+        }
+        .contact-info-card {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .contact-info-card:hover {
+            border-color: var(--border-hi);
+            background: var(--bg-2);
+            transform: translateY(-4px);
+        }
+        .contact-info-card .icon {
+            font-size: 36px;
+            margin-bottom: 14px;
+        }
+        .contact-info-card .title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-0);
+            margin-bottom: 6px;
+        }
+        .contact-info-card .value {
+            font-size: 14px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            word-break: break-all;
+        }
+        .contact-info-card .desc {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-top: 8px;
+        }
+        .contact-form-wrap {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 48px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .contact-form-wrap h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .contact-form-wrap .form-intro {
+            font-size: 14px;
+            color: var(--text-2);
+            margin-bottom: 32px;
+        }
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7d99' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        .form-group select option {
+            background: var(--bg-2);
+            color: var(--text-0);
+        }
+        .form-submit-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: var(--bg-0);
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: var(--font-sans);
+        }
+        .form-submit-btn:hover {
+            box-shadow: 0 0 32px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .form-submit-btn:active {
+            transform: translateY(0);
+        }
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 48px 32px;
+        }
+        .form-success.show {
+            display: block;
+            animation: fadeUp 0.5s;
+        }
+        .form-success .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .form-success h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--green);
+        }
+        .form-success p {
+            font-size: 15px;
+            color: var(--text-1);
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+        .form-error {
+            font-size: 13px;
+            color: var(--red);
+            margin-top: 6px;
+            display: none;
+        }
+        .form-error.show { display: block; }
+        .form-group input.error,
+        .form-group textarea.error,
+        .form-group select.error {
+            border-color: var(--red);
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .contact-info { grid-template-columns: 1fr; }
+            .contact-form-wrap { padding: 32px 24px; }
+        }
+    </style>
+<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== Page Header ===== -->
+<section class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <span>联系我们</span>
+        </div>
+        <h1>联系我们</h1>
+        <p>有问题？随时告诉我们</p>
+    </div>
+</section>
+
+<!-- ===== Contact Info ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="contact-info">
+            <div class="contact-info-card reveal">
+                <div class="icon">📧</div>
+                <div class="title">电子邮箱</div>
+                <div class="value">hello@cloudninja.cn</div>
+                <div class="desc">工作日 24 小时内回复</div>
+            </div>
+            <div class="contact-info-card reveal">
+                <div class="icon">💬</div>
+                <div class="title">微信公众号</div>
+                <div class="value">云忍者CloudNinja</div>
+                <div class="desc">关注获取最新题库更新</div>
+            </div>
+            <div class="contact-info-card reveal">
+                <div class="icon">🐙</div>
+                <div class="title">GitHub</div>
+                <div class="value">github.com/cloudninja-cn</div>
+                <div class="desc">提交 Issue 或贡献题目</div>
+            </div>
+        </div>
+
+        <!-- ===== Contact Form ===== -->
+        <div class="contact-form-wrap reveal">
+            <div id="formContainer">
+                <h2>发送消息</h2>
+                <p class="form-intro">填写下方表单，我们会尽快与你联系</p>
+                <form class="contact-form" id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" name="name" placeholder="请输入你的姓名" required>
+                        <div class="form-error" id="nameError">请输入你的姓名</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                        <div class="form-error" id="emailError">请输入有效的邮箱地址</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">主题</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">请选择咨询主题</option>
+                            <option value="cert">认证咨询</option>
+                            <option value="tech">技术问题</option>
+                            <option value="coop">合作建议</option>
+                            <option value="feedback">反馈建议</option>
+                        </select>
+                        <div class="form-error" id="subjectError">请选择一个咨询主题</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">消息</label>
+                        <textarea id="message" name="message" placeholder="请详细描述你的问题或建议..." required></textarea>
+                        <div class="form-error" id="messageError">请输入消息内容（至少 10 个字符）</div>
+                    </div>
+                    <button type="submit" class="form-submit-btn">发送消息</button>
+                </form>
+            </div>
+
+            <!-- 成功提示 -->
+            <div class="form-success" id="formSuccess">
+                <div class="success-icon">✅</div>
+                <h3>消息发送成功！</h3>
+                <p>感谢你的来信，我们已经收到你的消息。<br>会在工作日 24 小时内通过邮箱回复你。</p>
+                <button class="btn-secondary" id="resetFormBtn">再发一条</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script>
+    (function () {
+        const form = document.getElementById('contactForm');
+        const formContainer = document.getElementById('formContainer');
+        const formSuccess = document.getElementById('formSuccess');
+        const resetBtn = document.getElementById('resetFormBtn');
+
+        // 表单字段引用
+        const fields = {
+            name: document.getElementById('name'),
+            email: document.getElementById('email'),
+            subject: document.getElementById('subject'),
+            message: document.getElementById('message')
+        };
+        const errors = {
+            name: document.getElementById('nameError'),
+            email: document.getElementById('emailError'),
+            subject: document.getElementById('subjectError'),
+            message: document.getElementById('messageError')
+        };
+
+        // 校验邮箱格式
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // 清除单个字段的错误状态
+        function clearError(field) {
+            fields[field].classList.remove('error');
+            errors[field].classList.remove('show');
+        }
+
+        // 显示某个字段的错误
+        function showError(field) {
+            fields[field].classList.add('error');
+            errors[field].classList.add('show');
+        }
+
+        // 输入时实时清除错误
+        Object.keys(fields).forEach(function (key) {
+            fields[key].addEventListener('input', function () { clearError(key); });
+            fields[key].addEventListener('change', function () { clearError(key); });
+        });
+
+        // 表单提交
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var valid = true;
+
+            // 校验姓名
+            if (!fields.name.value.trim()) {
+                showError('name');
+                valid = false;
+            }
+
+            // 校验邮箱
+            if (!fields.email.value.trim() || !isValidEmail(fields.email.value.trim())) {
+                showError('email');
+                valid = false;
+            }
+
+            // 校验主题
+            if (!fields.subject.value) {
+                showError('subject');
+                valid = false;
+            }
+
+            // 校验消息
+            if (!fields.message.value.trim() || fields.message.value.trim().length < 10) {
+                showError('message');
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            // 模拟提交成功
+            formContainer.style.display = 'none';
+            formSuccess.classList.add('show');
+        });
+
+        // 重置表单
+        resetBtn.addEventListener('click', function () {
+            form.reset();
+            Object.keys(fields).forEach(function (key) { clearError(key); });
+            formSuccess.classList.remove('show');
+            formContainer.style.display = 'block';
+        });
+    })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="云忍者大冒险 — 躲避宕机、收集认证徽章的街机学习小游戏，放松大脑的同时感受云计算乐趣。">
+    <title>学习游戏 | 云忍者</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Game 页面专属样式 */
+        .game-instructions {
+            max-width: 600px;
+            margin: 32px auto 0;
+            padding: 24px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: left;
+        }
+        .game-instructions h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-0);
+        }
+        .game-instructions ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .game-instructions li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-1);
+        }
+        .game-instructions li .item-emoji {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .game-instructions .key-hint {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--bg-3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+        }
+        .game-instructions .desc-full {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-2);
+            line-height: 1.7;
+        }
+        @media (max-width: 600px) {
+            .game-instructions ul { grid-template-columns: 1fr; }
+            #gameCanvas { max-width: 100%; height: auto; }
+        }
+    </style>
+<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== Page Header ===== -->
+<section class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <span>学习游戏</span>
+        </div>
+        <h1>云忍者大冒险</h1>
+        <p>躲避宕机、收集认证徽章、击败 Boss</p>
+    </div>
+</section>
+
+<!-- ===== Game ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="game-container">
+            <!-- 分数 / 生命 / 等级 -->
+            <div class="game-score">
+                <div class="game-score-item">
+                    <div class="label">分数</div>
+                    <div class="value" id="scoreDisplay">0</div>
+                </div>
+                <div class="game-score-item">
+                    <div class="label">生命</div>
+                    <div class="value" id="livesDisplay" style="color: var(--red);">❤❤❤</div>
+                </div>
+                <div class="game-score-item">
+                    <div class="label">等级</div>
+                    <div class="value" id="levelDisplay" style="color: var(--warm);">1</div>
+                </div>
+            </div>
+
+            <!-- Canvas -->
+            <div class="game-canvas-wrap">
+                <canvas id="gameCanvas" width="760" height="500"></canvas>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="game-controls">
+                <button class="btn-primary" id="startBtn">开始</button>
+                <button class="btn-secondary" id="pauseBtn" disabled>暂停</button>
+                <button class="btn-secondary" id="restartBtn">重新开始</button>
+            </div>
+
+            <!-- 操作说明 -->
+            <div class="game-instructions">
+                <h3>操作说明 & 道具图鉴</h3>
+                <ul>
+                    <li><span class="item-emoji">⚡</span> 认证徽章 — 加 10 分</li>
+                    <li><span class="item-emoji">📖</span> 学习书本 — 加 5 分</li>
+                    <li><span class="item-emoji">💣</span> 炸弹 — 减 1 条命</li>
+                    <li><span class="item-emoji">⚠️</span> 宕机警告 — 减 5 分</li>
+                </ul>
+                <div class="desc-full">
+                    <strong>键盘控制：</strong>
+                    <span class="key-hint">←</span> / <span class="key-hint">A</span> 向左移动，
+                    <span class="key-hint">→</span> / <span class="key-hint">D</span> 向右移动，
+                    <span class="key-hint">空格</span> 开始 / 暂停游戏。<br>
+                    随着时间推移，物品掉落速度会逐渐加快，等级也会提升。3 条命用完后游戏结束。
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    // ===== Canvas 初始化 =====
+    var canvas = document.getElementById('gameCanvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width;   // 760
+    var H = canvas.height;  // 500
+
+    // ===== DOM 元素 =====
+    var scoreEl = document.getElementById('scoreDisplay');
+    var livesEl = document.getElementById('livesDisplay');
+    var levelEl = document.getElementById('levelDisplay');
+    var startBtn = document.getElementById('startBtn');
+    var pauseBtn = document.getElementById('pauseBtn');
+    var restartBtn = document.getElementById('restartBtn');
+
+    // ===== 游戏状态 =====
+    var STATE = { IDLE: 'idle', PLAYING: 'playing', PAUSED: 'paused', GAMEOVER: 'gameover' };
+    var state = STATE.IDLE;
+
+    // ===== 游戏数据 =====
+    var score = 0;
+    var lives = 3;
+    var level = 1;
+    var elapsedTime = 0;       // 游戏经过的毫秒数（用于难度递增）
+    var spawnTimer = 0;        // 距离上次生成物品的时间
+    var spawnInterval = 900;   // 物品生成间隔（毫秒），随等级递减
+    var baseFallSpeed = 1.5;   // 基础下落速度
+    var keys = {};             // 按键状态
+
+    // ===== 玩家 =====
+    var player = {
+        x: W / 2 - 24,
+        y: H - 70,
+        width: 48,
+        height: 48,
+        speed: 6,
+        emoji: '🥷'
+    };
+
+    // ===== 掉落物品定义 =====
+    var ITEM_TYPES = [
+        { emoji: '⚡',  type: 'badge',  score: 10,  weight: 30 },  // 认证徽章
+        { emoji: '📖', type: 'book',   score: 5,   weight: 25 },  // 书本
+        { emoji: '💣', type: 'bomb',   score: 0,   weight: 20 },  // 炸弹
+        { emoji: '⚠️',  type: 'warn',   score: -5,  weight: 25 }   // 宕机警告
+    ];
+
+    var items = [];       // 当前画面上的掉落物品
+    var particles = [];   // 粒子效果（碰撞反馈）
+
+    // ===== 工具函数 =====
+    function rand(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function randInt(min, max) {
+        return Math.floor(rand(min, max));
+    }
+
+    // 按权重随机选择物品类型
+    function pickItemType() {
+        var totalWeight = 0;
+        for (var i = 0; i < ITEM_TYPES.length; i++) totalWeight += ITEM_TYPES[i].weight;
+        var r = Math.random() * totalWeight;
+        for (var j = 0; j < ITEM_TYPES.length; j++) {
+            r -= ITEM_TYPES[j].weight;
+            if (r <= 0) return ITEM_TYPES[j];
+        }
+        return ITEM_TYPES[0];
+    }
+
+    // 生成一个掉落物品
+    function spawnItem() {
+        var type = pickItemType();
+        items.push({
+            x: rand(20, W - 50),
+            y: -40,
+            width: 36,
+            height: 36,
+            speed: baseFallSpeed + level * 0.4 + rand(0, 0.8),
+            emoji: type.emoji,
+            type: type.type,
+            score: type.score,
+            rotation: 0,
+            rotSpeed: rand(-0.05, 0.05)
+        });
+    }
+
+    // 生成粒子效果
+    function spawnParticles(x, y, color, count) {
+        for (var i = 0; i < count; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                vx: rand(-3, 3),
+                vy: rand(-4, 0),
+                life: 1.0,
+                color: color,
+                size: rand(2, 5)
+            });
+        }
+    }
+
+    // ===== 重置游戏 =====
+    function resetGame() {
+        score = 0;
+        lives = 3;
+        level = 1;
+        elapsedTime = 0;
+        spawnTimer = 0;
+        spawnInterval = 900;
+        items = [];
+        particles = [];
+        player.x = W / 2 - 24;
+        updateUI();
+    }
+
+    // ===== 更新 UI 显示 =====
+    function updateUI() {
+        scoreEl.textContent = score;
+        livesEl.textContent = '';
+        for (var i = 0; i < lives; i++) livesEl.textContent += '❤';
+        if (lives === 0) livesEl.textContent = '💀';
+        levelEl.textContent = level;
+    }
+
+    // ===== 碰撞检测（AABB） =====
+    function checkCollision(a, b) {
+        return a.x < b.x + b.width &&
+               a.x + a.width > b.x &&
+               a.y < b.y + b.height &&
+               a.y + a.height > b.y;
+    }
+
+    // ===== 游戏更新逻辑 =====
+    function update(dt) {
+        if (state !== STATE.PLAYING) return;
+
+        elapsedTime += dt;
+
+        // 难度递增：每 15 秒提升一个等级
+        var newLevel = Math.floor(elapsedTime / 15000) + 1;
+        if (newLevel !== level) {
+            level = newLevel;
+            spawnInterval = Math.max(350, 900 - level * 70); // 生成间隔随等级缩短
+            updateUI();
+        }
+
+        // 玩家移动
+        if (keys['ArrowLeft'] || keys['a'] || keys['A']) {
+            player.x -= player.speed;
+        }
+        if (keys['ArrowRight'] || keys['d'] || keys['D']) {
+            player.x += player.speed;
+        }
+        // 边界限制
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.width > W) player.x = W - player.width;
+
+        // 生成物品
+        spawnTimer += dt;
+        if (spawnTimer >= spawnInterval) {
+            spawnTimer = 0;
+            spawnItem();
+        }
+
+        // 更新物品
+        for (var i = items.length - 1; i >= 0; i--) {
+            var item = items[i];
+            item.y += item.speed;
+            item.rotation += item.rotSpeed;
+
+            // 碰撞检测
+            if (checkCollision(player, item)) {
+                if (item.type === 'bomb') {
+                    lives--;
+                    spawnParticles(item.x + 18, item.y + 18, '#ff6480', 15);
+                    // 屏幕震动效果
+                    canvas.style.transform = 'translateX(4px)';
+                    setTimeout(function () { canvas.style.transform = 'translateX(-3px)'; }, 50);
+                    setTimeout(function () { canvas.style.transform = 'translateX(0)'; }, 100);
+                } else {
+                    score += item.score;
+                    if (score < 0) score = 0;
+                    var pColor = item.score > 0 ? '#00ff9d' : '#ff7a00';
+                    spawnParticles(item.x + 18, item.y + 18, pColor, 10);
+                }
+                items.splice(i, 1);
+                updateUI();
+                continue;
+            }
+
+            // 物品掉出屏幕底部
+            if (item.y > H) {
+                items.splice(i, 1);
+            }
+        }
+
+        // 更新粒子
+        for (var j = particles.length - 1; j >= 0; j--) {
+            var p = particles[j];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.15; // 重力
+            p.life -= 0.025;
+            if (p.life <= 0) particles.splice(j, 1);
+        }
+
+        // 检查游戏结束
+        if (lives <= 0) {
+            state = STATE.GAMEOVER;
+            startBtn.textContent = '开始';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+    }
+
+    // ===== 绘制网格背景 =====
+    function drawGrid() {
+        ctx.strokeStyle = 'rgba(0, 224, 255, 0.04)';
+        ctx.lineWidth = 1;
+        var gridSize = 40;
+        for (var x = 0; x <= W; x += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, H);
+            ctx.stroke();
+        }
+        for (var y = 0; y <= H; y += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(W, y);
+            ctx.stroke();
+        }
+    }
+
+    // ===== 绘制顶部 UI（分数条） =====
+    function drawTopUI() {
+        // 半透明背景条
+        ctx.fillStyle = 'rgba(13, 19, 32, 0.85)';
+        ctx.fillRect(0, 0, W, 44);
+        ctx.strokeStyle = 'rgba(0, 224, 255, 0.15)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, 44);
+        ctx.lineTo(W, 44);
+        ctx.stroke();
+
+        ctx.font = '600 14px "JetBrains Mono", monospace';
+        ctx.textBaseline = 'middle';
+
+        // 分数
+        ctx.fillStyle = '#00e0ff';
+        ctx.textAlign = 'left';
+        ctx.fillText('SCORE  ' + score, 20, 22);
+
+        // 生命
+        ctx.fillStyle = '#ff6480';
+        ctx.textAlign = 'center';
+        var hearts = '';
+        for (var i = 0; i < lives; i++) hearts += '❤ ';
+        ctx.fillText(hearts.trim() || '💀', W / 2, 22);
+
+        // 等级
+        ctx.fillStyle = '#ff7a00';
+        ctx.textAlign = 'right';
+        ctx.fillText('LV ' + level, W - 20, 22);
+    }
+
+    // ===== 绘制玩家 =====
+    function drawPlayer() {
+        ctx.font = '36px "Noto Sans SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(player.emoji, player.x + player.width / 2, player.y + player.height / 2);
+
+        // 玩家底部光晕
+        var glowGrad = ctx.createRadialGradient(
+            player.x + player.width / 2, player.y + player.height + 8, 0,
+            player.x + player.width / 2, player.y + player.height + 8, 30
+        );
+        glowGrad.addColorStop(0, 'rgba(0, 224, 255, 0.25)');
+        glowGrad.addColorStop(1, 'rgba(0, 224, 255, 0)');
+        ctx.fillStyle = glowGrad;
+        ctx.beginPath();
+        ctx.ellipse(player.x + player.width / 2, player.y + player.height + 8, 30, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // ===== 绘制掉落物品 =====
+    function drawItems() {
+        ctx.font = '28px "Noto Sans SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            ctx.save();
+            ctx.translate(item.x + item.width / 2, item.y + item.height / 2);
+            ctx.rotate(item.rotation);
+            ctx.fillText(item.emoji, 0, 0);
+            ctx.restore();
+        }
+    }
+
+    // ===== 绘制粒子 =====
+    function drawParticles() {
+        for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    // ===== 绘制遮罩文字（开始/暂停/结束） =====
+    function drawOverlay(title, subtitle, accentColor) {
+        ctx.fillStyle = 'rgba(7, 11, 20, 0.78)';
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // 标题
+        ctx.font = '900 36px "Noto Sans SC", sans-serif';
+        ctx.fillStyle = accentColor || '#00e0ff';
+        ctx.fillText(title, W / 2, H / 2 - 20);
+
+        // 副标题
+        ctx.font = '400 16px "Noto Sans SC", sans-serif';
+        ctx.fillStyle = '#a8b8d0';
+        ctx.fillText(subtitle, W / 2, H / 2 + 24);
+    }
+
+    // ===== 主渲染函数 =====
+    function render() {
+        // 清空画布
+        ctx.fillStyle = '#070b14';
+        ctx.fillRect(0, 0, W, H);
+
+        // 网格背景
+        drawGrid();
+
+        if (state === STATE.IDLE) {
+            drawOverlay('云忍者大冒险', '按 空格键 或 点击「开始」按钮 开始游戏', '#00e0ff');
+            return;
+        }
+
+        if (state === STATE.GAMEOVER) {
+            // 绘制最后的游戏画面（模糊在遮罩下方）
+            drawItems();
+            drawPlayer();
+            drawParticles();
+            drawTopUI();
+            ctx.fillStyle = 'rgba(7, 11, 20, 0.82)';
+            ctx.fillRect(0, 0, W, H);
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.font = '900 40px "Noto Sans SC", sans-serif';
+            ctx.fillStyle = '#ff6480';
+            ctx.fillText('游戏结束', W / 2, H / 2 - 50);
+
+            ctx.font = '700 28px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#00e0ff';
+            ctx.fillText('最终得分: ' + score, W / 2, H / 2);
+
+            ctx.font = '400 15px "Noto Sans SC", sans-serif';
+            ctx.fillStyle = '#a8b8d0';
+            ctx.fillText('达到等级 ' + level + ' · 按 空格键 或 点击「重新开始」再战一局', W / 2, H / 2 + 40);
+            return;
+        }
+
+        // 正常游戏渲染
+        drawItems();
+        drawPlayer();
+        drawParticles();
+        drawTopUI();
+
+        if (state === STATE.PAUSED) {
+            drawOverlay('游戏暂停', '按 空格键 或 点击「开始」继续', '#ff7a00');
+        }
+    }
+
+    // ===== 游戏主循环 =====
+    var lastTime = 0;
+    function gameLoop(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        var dt = timestamp - lastTime;
+        lastTime = timestamp;
+
+        // 限制 dt 防止切屏后跳帧
+        if (dt > 100) dt = 100;
+
+        update(dt);
+        render();
+        requestAnimationFrame(gameLoop);
+    }
+
+    // ===== 开始游戏 =====
+    function startGame() {
+        if (state === STATE.GAMEOVER || state === STATE.IDLE) {
+            resetGame();
+        }
+        state = STATE.PLAYING;
+        startBtn.textContent = '运行中';
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = '暂停';
+    }
+
+    // ===== 暂停 / 继续 =====
+    function togglePause() {
+        if (state === STATE.PLAYING) {
+            state = STATE.PAUSED;
+            startBtn.textContent = '继续';
+            startBtn.disabled = false;
+            pauseBtn.textContent = '继续';
+        } else if (state === STATE.PAUSED) {
+            state = STATE.PLAYING;
+            startBtn.textContent = '运行中';
+            startBtn.disabled = true;
+            pauseBtn.textContent = '暂停';
+        }
+    }
+
+    // ===== 重新开始 =====
+    function restartGame() {
+        resetGame();
+        state = STATE.PLAYING;
+        startBtn.textContent = '运行中';
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        pauseBtn.textContent = '暂停';
+    }
+
+    // ===== 按钮事件 =====
+    startBtn.addEventListener('click', function () {
+        if (state === STATE.PAUSED) {
+            togglePause();
+        } else {
+            startGame();
+        }
+    });
+
+    pauseBtn.addEventListener('click', function () {
+        togglePause();
+    });
+
+    restartBtn.addEventListener('click', function () {
+        restartGame();
+    });
+
+    // ===== 键盘事件 =====
+    document.addEventListener('keydown', function (e) {
+        keys[e.key] = true;
+
+        // 阻止箭头键滚动页面
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
+            e.preventDefault();
+        }
+
+        // 空格键
+        if (e.key === ' ' || e.code === 'Space') {
+            if (state === STATE.IDLE || state === STATE.GAMEOVER) {
+                startGame();
+            } else if (state === STATE.PLAYING || state === STATE.PAUSED) {
+                togglePause();
+            }
+        }
+    });
+
+    document.addEventListener('keyup', function (e) {
+        keys[e.key] = false;
+    });
+
+    // ===== 启动 =====
+    updateUI();
+    requestAnimationFrame(gameLoop);
+})();
+</script>
+
+</body>
+</html>

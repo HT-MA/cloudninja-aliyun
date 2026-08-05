@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="云忍者模拟考试中心 — 覆盖 ACA、ACP、ACE 全部认证方向，支持即时反馈练习模式和计时考试模式，免费在线刷题。">
+    <meta name="keywords" content="阿里云认证, 模拟考试, ACA, ACP, ACE, 在线刷题, 云忍者">
+    <title>模拟考试 | 云忍者</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== Page Header ===== -->
+<header class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <span>模拟考试</span>
+        </div>
+        <h1>模拟考试中心</h1>
+        <p>选择认证方向，开始练习。支持即时反馈和计时考试两种模式。</p>
+    </div>
+</header>
+
+<!-- ===== Exams ===== -->
+<section class="section" style="padding-top: 40px;">
+    <div class="container">
+        <div class="cert-filter reveal">
+            <button class="filter-btn active" data-level="all">全部</button>
+            <button class="filter-btn" data-level="aca">ACA · 助理工程师</button>
+            <button class="filter-btn" data-level="acp">ACP · 高级工程师</button>
+            <button class="filter-btn" data-level="ace">ACE · 专家工程师</button>
+        </div>
+
+        <div class="exam-grid" id="examGrid">
+
+            <!-- ===== ACA ===== -->
+            <div class="exam-card reveal" data-level="aca">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云计算助理工程师</h3>
+                        <div class="exam-code">ACA-Cloud</div>
+                    </div>
+                    <span class="cert-level level-aca">ACA</span>
+                </div>
+                <div class="exam-desc">面向云计算入门者，覆盖云服务器 ECS、对象存储 OSS、专有网络 VPC 等阿里云核心产品的基础概念与典型操作。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">50</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">60min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--green)">入门</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=aca-cloud&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=aca-cloud&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="aca">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云安全助理工程师</h3>
+                        <div class="exam-code">ACA-Security</div>
+                    </div>
+                    <span class="cert-level level-aca">ACA</span>
+                </div>
+                <div class="exam-desc">聚焦云安全基础：安全组、网络 ACL、RAM 访问控制、云盾 DDoS 与 WAF 等安全产品的基本概念与防护原理。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">50</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">60min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--green)">入门</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=aca-security&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=aca-security&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="aca">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云原生助理工程师</h3>
+                        <div class="exam-code">ACA-CloudNative</div>
+                    </div>
+                    <span class="cert-level level-aca">ACA</span>
+                </div>
+                <div class="exam-desc">容器、微服务与 Serverless 入门：Docker 基础、Kubernetes 核心概念、ACK 容器服务与函数计算的基本使用。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">50</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">60min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--green)">入门</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=aca-cloudnative&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=aca-cloudnative&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="aca">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>大模型助理工程师</h3>
+                        <div class="exam-code">ACA-LLM</div>
+                    </div>
+                    <span class="cert-level level-aca">ACA</span>
+                </div>
+                <div class="exam-desc">通义千问、百炼平台与大模型应用基础：Prompt 工程、RAG 检索增强、LangChain 集成与模型调用最佳实践。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">50</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">60min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--green)">入门</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=aca-llm&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=aca-llm&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <!-- ===== ACP ===== -->
+            <div class="exam-card reveal" data-level="acp">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云计算高级工程师</h3>
+                        <div class="exam-code">ACP-Cloud</div>
+                    </div>
+                    <span class="cert-level level-acp">ACP</span>
+                </div>
+                <div class="exam-desc">进阶云计算架构：ECS 实例选型与存储优化、SLB 负载均衡、RDS 高可用、ESS 弹性伸缩与高可用架构设计实战。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--warm)">进阶</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=acp-cloud&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=acp-cloud&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="acp">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云安全高级工程师</h3>
+                        <div class="exam-code">ACP-Security</div>
+                    </div>
+                    <span class="cert-level level-acp">ACP</span>
+                </div>
+                <div class="exam-desc">深度云安全体系：云防火墙、WAF Web 应用防火墙、数据安全中心、堡垒机运维安全审计与等保合规实践。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--warm)">进阶</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=acp-security&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=acp-security&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="acp">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云原生容器高级工程师</h3>
+                        <div class="exam-code">ACP-Container</div>
+                    </div>
+                    <span class="cert-level level-acp">ACP</span>
+                </div>
+                <div class="exam-desc">容器与编排深度实战：ACK 托管/专有集群、ACK Serverless、容器镜像服务 ACR、Helm 与 CSI/CCI 调度原理。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--warm)">进阶</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=acp-container&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=acp-container&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="acp">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>DevOps 高级工程师</h3>
+                        <div class="exam-code">ACP-DevOps</div>
+                    </div>
+                    <span class="cert-level level-acp">ACP</span>
+                </div>
+                <div class="exam-desc">端到端 DevOps 流水线：云效 Flow 流水线、EDAS 应用部署、容器服务持续交付、可观测性与基础设施即代码 IaC。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--warm)">进阶</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=acp-devops&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=acp-devops&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="acp">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>大模型高级工程师</h3>
+                        <div class="exam-code">ACP-LLM</div>
+                    </div>
+                    <span class="cert-level level-acp">ACP</span>
+                </div>
+                <div class="exam-desc">大模型工程化落地：百炼平台企业级应用、模型微调 SFT、向量检索与 RAG 知识库、Agent 编排与函数调用。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--warm)">进阶</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=acp-llm&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=acp-llm&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <!-- ===== ACE ===== -->
+            <div class="exam-card reveal" data-level="ace">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云计算专家工程师</h3>
+                        <div class="exam-code">ACE-Cloud</div>
+                    </div>
+                    <span class="cert-level level-ace">ACE</span>
+                </div>
+                <div class="exam-desc">对标阿里 P8 架构师能力：大规模高可用架构、混合云容灾、性能与成本优化、多活架构设计，含笔试 + 实验 + 面试。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100+</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--red)">专家</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=ace-cloud&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=ace-cloud&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+            <div class="exam-card reveal" data-level="ace">
+                <div class="exam-card-head">
+                    <div>
+                        <h3>云安全专家工程师</h3>
+                        <div class="exam-code">ACE-Security</div>
+                    </div>
+                    <span class="cert-level level-ace">ACE</span>
+                </div>
+                <div class="exam-desc">安全架构顶层设计：零信任体系、纵深防御、数据全生命周期安全、攻防演练与应急响应，含笔试 + 实验 + 面试。</div>
+                <div class="exam-meta">
+                    <div class="exam-meta-item">题数 <strong style="color:var(--text-0)">100+</strong></div>
+                    <div class="exam-meta-item">时长 <strong style="color:var(--text-0)">120min</strong></div>
+                    <div class="exam-meta-item">难度 <strong style="color:var(--red)">专家</strong></div>
+                </div>
+                <div class="exam-actions">
+                    <a class="exam-btn-practice" href="quiz.html?exam=ace-security&mode=practice">练习模式</a>
+                    <a class="exam-btn-exam" href="quiz.html?exam=ace-security&mode=exam">考试模式</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Mode tips -->
+        <div class="qotd-wrap reveal" style="margin-top: 64px; grid-template-columns: auto 1fr; gap: 32px;">
+            <div class="qotd-date">
+                <div class="month">MODE</div>
+                <div class="day">02</div>
+                <div class="label">两种模式</div>
+            </div>
+            <div class="qotd-content">
+                <div class="qotd-tag">如何选择模式</div>
+                <h3 style="font-size:20px;font-weight:700;margin-bottom:16px;">练习模式 vs 考试模式</h3>
+                <p style="font-size:15px;color:var(--text-1);line-height:1.9;margin-bottom:12px;">
+                    <strong style="color:var(--accent);">练习模式：</strong>答完每一题立即查看正确答案和详细解析，支持前后翻阅，不计时。适合复习阶段巩固知识点。
+                </p>
+                <p style="font-size:15px;color:var(--text-1);line-height:1.9;">
+                    <strong style="color:var(--warm);">考试模式：</strong>模拟真实考场，全程计时（ACA 60 分钟 / ACP 120 分钟），答完所有题后统一批改并展示成绩单与环形分数图。适合考前冲刺自测。
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script>
+    // ===== Exam filter =====
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const level = btn.dataset.level;
+            document.querySelectorAll('#examGrid .exam-card').forEach(card => {
+                card.style.display = (level === 'all' || card.dataset.level === level) ? '' : 'none';
+            });
+        });
+    });
+
+    // ===== Scroll reveal (app.js also observes, but ensure cards animate) =====
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('in');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

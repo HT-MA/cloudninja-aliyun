@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="云忍者 — 免费的阿里云认证备考平台。模拟考试、详细解析、认证指南，助你轻松通过 ACA、ACP、ACE 认证。">
+    <meta name="keywords" content="阿里云认证, ACA, ACP, ACE, 云计算, 模拟考试, 认证备考, 云忍者">
+    <title>云忍者 — 阿里云认证备考平台 | 免费模拟考试</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                全新上线 · 2026 阿里云认证题库
+            </div>
+            <h1>
+                掌握阿里云认证<br>
+                <span class="accent">一次通关</span><br>
+                <span class="strike">拒绝题海战术</span>
+            </h1>
+            <p>免费模拟考试、详细解析、认证指南——由阿里云认证专家打造，覆盖 ACA、ACP、ACE 全部认证方向。无需注册，立即开始。</p>
+            <div class="hero-actions">
+                <a href="practice.html" class="btn-primary">开始练习 →</a>
+                <a href="certifications.html" class="btn-secondary">浏览认证</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="num" data-target="20">0</div>
+                    <div class="label">认证方向</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="num" data-target="1000">0</div>
+                    <div class="label">+ 精选题目</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="num" data-target="100">0</div>
+                    <div class="label">% 免费</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="num" data-target="0">0</div>
+                    <div class="label">元 · 注册费用</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Features ===== -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-tag">核心功能</span>
+            <h2 class="section-title">你需要的一切，都在这里</h2>
+            <p class="section-sub">从即时反馈到计时模拟，从进度追踪到专家解析——全方位备考体验</p>
+        </div>
+        <div class="features-grid">
+            <a href="practice.html" class="feature-card reveal" style="text-decoration:none;color:inherit">
+                <div class="feature-icon">⚡</div>
+                <h3>即时反馈</h3>
+                <p>练习模式下每答一题立即查看正确答案和详细解析，包含阿里云官方文档参考链接</p>
+            </a>
+            <a href="practice.html" class="feature-card reveal" style="text-decoration:none;color:inherit">
+                <div class="feature-icon">⏱️</div>
+                <h3>计时考试模式</h3>
+                <p>模拟真实考试环境，倒计时 + 题目导航，让你提前适应考场节奏，消除紧张感</p>
+            </a>
+            <a href="practice.html" class="feature-card reveal" style="text-decoration:none;color:inherit">
+                <div class="feature-icon">📊</div>
+                <h3>进度追踪</h3>
+                <p>按知识域和难度分类统计正确率，精准定位薄弱环节，让复习更有针对性</p>
+            </a>
+            <a href="practice.html" class="feature-card reveal" style="text-decoration:none;color:inherit">
+                <div class="feature-icon">🎓</div>
+                <h3>专家解析</h3>
+                <p>每道题都附带专家级解释，深入讲解原理与最佳实践，不只是背答案</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Question of the Day ===== -->
+<section class="section" id="qotd" style="padding-top: 0;">
+    <div class="container">
+        <div class="qotd-wrap reveal">
+            <div class="qotd-date">
+                <div class="month">AUGUST</div>
+                <div class="day" id="qotdDay">03</div>
+                <div class="label">每日一题</div>
+            </div>
+            <div class="qotd-content">
+                <div class="qotd-tag">🔥 ACA 云计算工程师 · 单选题</div>
+                <h3>在阿里云 ECS 中，以下哪种存储类型最适合需要高随机 IOPS 和低延迟的数据库场景？</h3>
+                <div class="qotd-options" id="qotdOptions">
+                    <div class="qotd-option" onclick="checkAnswer(this, false)">
+                        <span class="key">A</span> 普通云盘
+                    </div>
+                    <div class="qotd-option" onclick="checkAnswer(this, false)">
+                        <span class="key">B</span> SSD 云盘
+                    </div>
+                    <div class="qotd-option" onclick="checkAnswer(this, true)">
+                        <span class="key">C</span> ESSD（增强型 SSD）
+                    </div>
+                    <div class="qotd-option" onclick="checkAnswer(this, false)">
+                        <span class="key">D</span> 本地 SSD 盘
+                    </div>
+                </div>
+                <div class="qotd-explain" id="qotdExplain">
+                    <strong>✅ 正确答案：C. ESSD（增强型 SSD）</strong><br><br>
+                    ESSD（Enhanced SSD）基于新一代分布式块存储架构，提供高达 100 万 PL 的随机读写 IOPS 和超低延迟，是数据库等高 IO 场景的首选。相比普通 SSD 云盘，ESSD 在性能上有质的飞跃；而本地 SSD 盘虽然有高性能但数据可靠性不如云盘，且无法随时扩容和快照备份。<br><br>
+                    📖 参考：阿里云 ESSD 产品文档 — 块存储性能对比
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Game Promo ===== -->
+<section class="section" id="game" style="padding-top: 0;">
+    <div class="container">
+        <div class="game-banner reveal">
+            <div class="game-visual">🎮</div>
+            <div class="game-text">
+                <h3>学习累了？来玩一局</h3>
+                <p>躲避宕机、收集认证徽章、击败 Boss——一个有趣的街机小游戏，放松一下大脑，你值得休息</p>
+                <a href="game.html" class="btn-primary">开始游戏 →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Certifications ===== -->
+<section class="section" id="certifications">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-tag">认证体系</span>
+            <h2 class="section-title">阿里云认证全览</h2>
+            <p class="section-sub">三大等级、二十个方向，从入门到专家，找到适合你的认证路径</p>
+        </div>
+
+        <div class="cert-filter reveal">
+            <button class="filter-btn active" data-level="all">全部</button>
+            <button class="filter-btn" data-level="aca">ACA · 助理工程师</button>
+            <button class="filter-btn" data-level="acp">ACP · 高级工程师</button>
+            <button class="filter-btn" data-level="ace">ACE · 专家工程师</button>
+        </div>
+
+        <div class="cert-table-wrap reveal">
+            <table class="cert-table" id="certTable">
+                <thead>
+                    <tr>
+                        <th>认证名称</th>
+                        <th>代码</th>
+                        <th>等级</th>
+                        <th>题数</th>
+                        <th>时长</th>
+                        <th>通过线</th>
+                        <th>费用</th>
+                    </tr>
+                </thead>
+                <tbody id="certTbody">
+                    <!-- ACA -->
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-cloud'">
+                        <td class="cert-name">云计算助理工程师</td>
+                        <td class="cert-code">ACA-Cloud</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-security'">
+                        <td class="cert-name">云安全助理工程师</td>
+                        <td class="cert-code">ACA-Security</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-database'">
+                        <td class="cert-name">云数据库助理工程师</td>
+                        <td class="cert-code">ACA-Database</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-cloudnative'">
+                        <td class="cert-name">云原生助理工程师</td>
+                        <td class="cert-code">ACA-CloudNative</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-bigdata'">
+                        <td class="cert-name">大数据助理工程师</td>
+                        <td class="cert-code">ACA-BigData</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-ai'">
+                        <td class="cert-name">人工智能助理工程师</td>
+                        <td class="cert-code">ACA-AI</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <tr data-level="aca" onclick="window.location.href='certifications.html?cert=aca-llm'">
+                        <td class="cert-name">大模型助理工程师</td>
+                        <td class="cert-code">ACA-LLM</td>
+                        <td><span class="cert-level level-aca">ACA · 基础</span></td>
+                        <td>50 题</td>
+                        <td>60 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥600</td>
+                    </tr>
+                    <!-- ACP -->
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-cloud'">
+                        <td class="cert-name">云计算高级工程师</td>
+                        <td class="cert-code">ACP-Cloud</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-security'">
+                        <td class="cert-name">云安全高级工程师</td>
+                        <td class="cert-code">ACP-Security</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-database'">
+                        <td class="cert-name">云数据库高级工程师</td>
+                        <td class="cert-code">ACP-Database</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-container'">
+                        <td class="cert-name">云原生容器高级工程师</td>
+                        <td class="cert-code">ACP-Container</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-microservice'">
+                        <td class="cert-name">微服务高级工程师</td>
+                        <td class="cert-code">ACP-Microservice</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-bigdata'">
+                        <td class="cert-name">大数据高级工程师</td>
+                        <td class="cert-code">ACP-BigData</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-ai'">
+                        <td class="cert-name">人工智能高级工程师</td>
+                        <td class="cert-code">ACP-AI</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-devops'">
+                        <td class="cert-name">DevOps 高级工程师</td>
+                        <td class="cert-code">ACP-DevOps</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <tr data-level="acp" onclick="window.location.href='certifications.html?cert=acp-llm'">
+                        <td class="cert-name">大模型高级工程师</td>
+                        <td class="cert-code">ACP-LLM</td>
+                        <td><span class="cert-level level-acp">ACP · 中级</span></td>
+                        <td>100 题</td>
+                        <td>120 分钟</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥1,200</td>
+                    </tr>
+                    <!-- ACE -->
+                    <tr data-level="ace" onclick="window.location.href='certifications.html?cert=ace-cloud'">
+                        <td class="cert-name">云计算专家工程师</td>
+                        <td class="cert-code">ACE-Cloud</td>
+                        <td><span class="cert-level level-ace">ACE · 专家</span></td>
+                        <td>100 题 + 实验 + 面试</td>
+                        <td>笔试 120min · 实验 8h · 面试 1h</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥9,600</td>
+                    </tr>
+                    <tr data-level="ace" onclick="window.location.href='certifications.html?cert=ace-security'">
+                        <td class="cert-name">云安全专家工程师</td>
+                        <td class="cert-code">ACE-Security</td>
+                        <td><span class="cert-level level-ace">ACE · 专家</span></td>
+                        <td>100 题 + 实验 + 面试</td>
+                        <td>笔试 120min · 实验 8h · 面试 1h</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥9,600</td>
+                    </tr>
+                    <tr data-level="ace" onclick="window.location.href='certifications.html?cert=ace-database'">
+                        <td class="cert-name">云数据库专家工程师</td>
+                        <td class="cert-code">ACE-Database</td>
+                        <td><span class="cert-level level-ace">ACE · 专家</span></td>
+                        <td>100 题 + 实验 + 面试</td>
+                        <td>笔试 120min · 实验 8h · 面试 1h</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥9,600</td>
+                    </tr>
+                    <tr data-level="ace" onclick="window.location.href='certifications.html?cert=ace-cloudnative'">
+                        <td class="cert-name">云原生专家工程师</td>
+                        <td class="cert-code">ACE-CloudNative</td>
+                        <td><span class="cert-level level-ace">ACE · 专家</span></td>
+                        <td>100 题 + 实验 + 面试</td>
+                        <td>笔试 120min · 实验 8h · 面试 1h</td>
+                        <td>80/100</td>
+                        <td class="cert-price">¥9,600</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Certification Paths ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-tag">学习路径</span>
+            <h2 class="section-title">你应该先考哪个？</h2>
+            <p class="section-sub">根据你的经验和目标，选择最合适的认证路径</p>
+        </div>
+        <div class="paths-grid">
+            <a href="certifications.html?cert=aca-cloud" class="path-card reveal" style="text-decoration:none;color:inherit">
+                <div class="path-icon">🌱</div>
+                <h4>零基础入门</h4>
+                <div class="exp">无需云经验</div>
+                <p>从 <strong>ACA 云计算助理工程师</strong> 开始，掌握云计算基本概念和阿里云核心产品。对 AI 感兴趣的同学也可以选择 ACA 大模型方向作为入口。</p>
+                <div class="cert-rec">ACA-Cloud →</div>
+            </a>
+            <a href="certifications.html?cert=acp-cloud" class="path-card reveal" style="text-decoration:none;color:inherit">
+                <div class="path-icon">🚀</div>
+                <h4>1 年以上经验</h4>
+                <div class="exp">推荐先取得 ACA</div>
+                <p>直接冲刺 <strong>ACP 云计算高级工程师</strong>，这是市场上最受认可、性价比最高的认证。开发人员可考虑 ACP DevOps，运维人员选择 ACP 云原生容器。</p>
+                <div class="cert-rec">ACP-Cloud →</div>
+            </a>
+            <a href="certifications.html?cert=ace-cloud" class="path-card reveal" style="text-decoration:none;color:inherit">
+                <div class="path-icon">⚡</div>
+                <h4>3 年以上进阶</h4>
+                <div class="exp">建议已取得 ACP</div>
+                <p>挑战 <strong>ACE 云计算专家工程师</strong>，需通过笔试 + 8 小时实验 + 1 小时面试，对标阿里 P8 架构师水平。是云计算领域含金量最高的认证之一。</p>
+                <div class="cert-rec">ACE-Cloud →</div>
+            </a>
+            <a href="certifications.html?cert=acp-security" class="path-card reveal" style="text-decoration:none;color:inherit">
+                <div class="path-icon">🎯</div>
+                <h4>垂直领域专精</h4>
+                <div class="exp">已有领域经验</div>
+                <p>在安全、数据库、云原生等领域有深度实战经验，选择对应的 <strong>ACP 或 ACE 专项认证</strong>，证明你在垂直方向的专业实力。</p>
+                <div class="cert-rec">ACP-Security →</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== YouTube CTA ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="yt-banner reveal">
+            <h3>📺 关注 B站 / YouTube</h3>
+            <p>深度阿里云教程、最佳实践、考试技巧——由认证专家录制</p>
+            <a href="https://www.youtube.com/" class="yt-btn">订阅频道 →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== About ===== -->
+<section class="section" id="about" style="padding-top: 0;">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-tag">关于我们</span>
+            <h2 class="section-title">为学习者而生</h2>
+        </div>
+        <div style="max-width: 680px; margin: 0 auto; text-align: center;" class="reveal">
+            <p style="font-size: 17px; color: var(--text-1); line-height: 1.8;">
+                云忍者致力于让阿里云认证培训对所有人触手可及。无论你是初涉云计算的新手，还是准备挑战 ACE 专家认证的资深工程师，
+                我们的免费模拟考试、视频教程和学习指南都能为你提供通关所需的一切。
+            </p>
+            <p style="font-size: 17px; color: var(--text-1); line-height: 1.8; margin-top: 16px;">
+                无需注册，直接开始练习。
+            </p>
+            <div style="margin-top: 32px;">
+                <a href="practice.html" class="btn-primary">开始你的云端之旅 →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script>
+    // ===== Particles =====
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 15 + 's';
+        p.style.animationDuration = (10 + Math.random() * 10) + 's';
+        const size = 2 + Math.random() * 4;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        particlesContainer.appendChild(p);
+    }
+
+    // ===== Counter animation =====
+    const counters = document.querySelectorAll('.hero-stat .num');
+    const animateCounter = (el) => {
+        const target = parseInt(el.dataset.target);
+        if (target === 0) { el.textContent = '0'; return; }
+        let current = 0;
+        const step = Math.ceil(target / 50);
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current;
+        }, 30);
+    };
+
+    // ===== Scroll reveal =====
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                if (entry.target.classList.contains('hero-stat')) {
+                    animateCounter(entry.target.querySelector('.num'));
+                }
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.hero-stat').forEach(el => observer.observe(el));
+
+    // ===== QOTD interaction =====
+    function checkAnswer(el, isCorrect) {
+        document.querySelectorAll('.qotd-option').forEach(opt => {
+            opt.style.pointerEvents = 'none';
+            if (opt === el) {
+                if (isCorrect) {
+                    opt.classList.add('correct');
+                } else {
+                    opt.classList.add('wrong');
+                    document.querySelectorAll('.qotd-option').forEach(o => {
+                        if (o.querySelector('.key').textContent === 'C') {
+                            o.classList.add('correct');
+                        }
+                    });
+                }
+            }
+        });
+        document.getElementById('qotdExplain').classList.add('show');
+    }
+
+    // ===== Cert filter =====
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const level = btn.dataset.level;
+            document.querySelectorAll('#certTbody tr').forEach(row => {
+                row.style.display = (level === 'all' || row.dataset.level === level) ? '' : 'none';
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

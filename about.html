@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="关于云忍者 — 让阿里云认证培训对所有人触手可及。了解我们的使命、理念与愿景。">
+    <title>关于我们 | 云忍者</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* About 页面专属样式 */
+        .reasons-list { list-style: none; max-width: 720px; margin: 0 auto; }
+        .reasons-list li {
+            display: flex; align-items: flex-start; gap: 16px;
+            padding: 20px 24px; margin-bottom: 12px;
+            background: var(--bg-1); border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 16px; color: var(--text-1); line-height: 1.6;
+            transition: all 0.3s;
+        }
+        .reasons-list li:hover { border-color: var(--border-hi); background: var(--bg-2); transform: translateX(6px); }
+        .reasons-list .reason-icon {
+            font-size: 22px; flex-shrink: 0; line-height: 1.4;
+        }
+        .reasons-list .reason-title { font-weight: 700; color: var(--text-0); }
+        .reasons-list .reason-desc { font-size: 14px; color: var(--text-2); margin-top: 4px; }
+        .stats-section { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+            max-width: 900px; margin: 0 auto;
+        }
+        .stats-grid .hero-stat { text-align: center; }
+        .stats-grid .hero-stat .num { font-size: 42px; }
+        .stats-grid .hero-stat .label { font-size: 14px; }
+        .about-cta {
+            text-align: center; padding: 64px 48px;
+            background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            border: 1px solid var(--border-hi); border-radius: var(--radius);
+            position: relative; overflow: hidden;
+        }
+        .about-cta::before {
+            content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 400px; background: radial-gradient(circle, var(--accent-dim), transparent 70%);
+        }
+        .about-cta h3 { font-size: 28px; font-weight: 800; margin-bottom: 12px; position: relative; }
+        .about-cta p { font-size: 16px; color: var(--text-1); margin-bottom: 28px; position: relative; }
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        }
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== About Hero ===== -->
+<section class="about-hero">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <span>关于我们</span>
+        </div>
+        <h1 style="font-size: clamp(36px, 5vw, 56px); font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px;">
+            为学习者<span style="background: linear-gradient(135deg, var(--accent), #0099ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">而生</span>
+        </h1>
+        <p style="font-size: 18px; color: var(--text-1); line-height: 1.8; max-width: 620px;">
+            云忍者是一个为中文云计算学习者打造的阿里云认证备考平台。我们相信，优质的学习资源不应该被付费墙阻挡——每个人都值得拥有公平、高效、专业的备考体验。
+        </p>
+
+        <!-- 三栏卡片 -->
+        <div class="about-grid">
+            <div class="about-card reveal">
+                <div class="icon">🎯</div>
+                <h3>使命</h3>
+                <p>让阿里云认证培训对所有人触手可及，无论地域、背景或预算，每位学习者都能获得专业级的备考资源。</p>
+            </div>
+            <div class="about-card reveal">
+                <div class="icon">💡</div>
+                <h3>理念</h3>
+                <p>免费、开放、即时开始，不设门槛。打开网页就能练习，不需要注册账号，不需要填写邮箱，不需要任何前置条件。</p>
+            </div>
+            <div class="about-card reveal">
+                <div class="icon">🚀</div>
+                <h3>愿景</h3>
+                <p>成为中文云计算学习者的首选备考平台，让每一个想进入云计算世界的人，都能在这里找到通往成功的路径。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 为什么选择云忍者 ===== -->
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-tag">核心优势</span>
+            <h2 class="section-title">为什么选择云忍者</h2>
+            <p class="section-sub">我们不只是提供题库，更致力于打造完整的学习闭环</p>
+        </div>
+        <ul class="reasons-list">
+            <li class="reveal">
+                <span class="reason-icon">🆓</span>
+                <div>
+                    <div class="reason-title">全免费无注册</div>
+                    <div class="reason-desc">零成本、零门槛，打开网页即刻开始练习，不收集任何个人信息</div>
+                </div>
+            </li>
+            <li class="reveal">
+                <span class="reason-icon">📝</span>
+                <div>
+                    <div class="reason-title">真实题库</div>
+                    <div class="reason-desc">紧贴阿里云官方考试大纲，题目覆盖真实考点，还原考试难度与题型</div>
+                </div>
+            </li>
+            <li class="reveal">
+                <span class="reason-icon">🎓</span>
+                <div>
+                    <div class="reason-title">专家解析</div>
+                    <div class="reason-desc">每道题附带详细解析和官方文档参考链接，讲透原理而非死记答案</div>
+                </div>
+            </li>
+            <li class="reveal">
+                <span class="reason-icon">📊</span>
+                <div>
+                    <div class="reason-title">进度追踪</div>
+                    <div class="reason-desc">按知识域和难度分类统计正确率，精准定位薄弱环节，高效复习</div>
+                </div>
+            </li>
+            <li class="reveal">
+                <span class="reason-icon">🔄</span>
+                <div>
+                    <div class="reason-title">持续更新</div>
+                    <div class="reason-desc">紧跟阿里云产品迭代和考试大纲变化，题库与解析定期维护更新</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- ===== 数据统计 ===== -->
+<section class="section stats-section" style="padding: 80px 0;">
+    <div class="container">
+        <div class="section-header reveal" style="margin-bottom: 48px;">
+            <span class="section-tag">数据说话</span>
+            <h2 class="section-title">用数字证明实力</h2>
+        </div>
+        <div class="stats-grid">
+            <div class="hero-stat reveal">
+                <div class="num" data-target="20" data-suffix="+">0</div>
+                <div class="label">认证方向</div>
+            </div>
+            <div class="hero-stat reveal">
+                <div class="num" data-target="1000" data-suffix="+">0</div>
+                <div class="label">精选题目</div>
+            </div>
+            <div class="hero-stat reveal">
+                <div class="num" data-target="5000" data-suffix="+">0</div>
+                <div class="label">学习用户</div>
+            </div>
+            <div class="hero-stat reveal">
+                <div class="num" data-target="98" data-suffix="%">0</div>
+                <div class="label">好评率</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section" style="padding-top: 0;">
+    <div class="container">
+        <div class="about-cta reveal">
+            <h3>准备好开始你的认证之旅了吗？</h3>
+            <p>无需注册，立即开始免费练习</p>
+            <a href="practice.html" class="btn-primary">开始练习 →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script>
+    // ===== 数字计数动画 =====
+    const animateCounter = (el) => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        if (target === 0) { el.textContent = '0' + suffix; return; }
+        let current = 0;
+        const step = Math.ceil(target / 50);
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current + suffix;
+        }, 30);
+    };
+
+    // ===== 滚动揭示 + 计数触发 =====
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                if (entry.target.classList.contains('hero-stat')) {
+                    const numEl = entry.target.querySelector('.num');
+                    if (numEl && !numEl.dataset.animated) {
+                        numEl.dataset.animated = 'true';
+                        animateCounter(numEl);
+                    }
+                }
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.hero-stat').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="云忍者答题系统 — 阿里云认证在线答题，支持练习模式即时反馈与考试模式计时批改，覆盖 ECS、OSS、VPC、RDS、SLB、RAM 等核心知识点。">
+    <meta name="keywords" content="阿里云认证, 在线答题, 模拟考试, 题库, ACA, ACP, 云忍者">
+    <title>答题中 | 云忍者</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Page-specific tweaks */
+        .quiz-mode-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700;
+            margin-left: 12px;
+        }
+        .quiz-mode-badge.practice { background: var(--accent-dim); color: var(--accent); }
+        .quiz-mode-badge.exam { background: var(--warm-dim); color: var(--warm); }
+        .quiz-exam-title { font-size: 14px; color: var(--text-1); }
+        .quiz-exam-title strong { color: var(--text-0); }
+        .quiz-q-number { margin-left: auto; }
+        .quiz-review-list {
+            display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0;
+            justify-content: center;
+        }
+        .quiz-review-pill {
+            width: 36px; height: 36px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+            background: var(--bg-3); color: var(--text-2); cursor: pointer;
+            border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .quiz-review-pill.answered { background: var(--accent-dim); color: var(--accent); border-color: var(--border-hi); }
+        .quiz-review-pill.correct { background: rgba(0,255,157,0.12); color: var(--green); border-color: rgba(0,255,157,0.3); }
+        .quiz-review-pill.wrong { background: var(--red-dim); color: var(--red); border-color: rgba(255,100,128,0.3); }
+        .quiz-review-pill:hover { transform: translateY(-2px); }
+        .quiz-empty { text-align: center; padding: 80px 24px; }
+        .quiz-empty h2 { font-size: 24px; margin-bottom: 12px; }
+        .quiz-empty p { color: var(--text-1); margin-bottom: 24px; }
+        .no-timer { color: var(--text-2) !important; background: transparent !important; border: 1px dashed var(--border) !important; }
+    </style>
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ===== Navigation ===== -->
+<nav id="nav"></nav>
+
+<!-- ===== Page Header ===== -->
+<header class="page-header" style="padding: 100px 0 30px;">
+    <div class="page-header-bg"></div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">首页</a>
+            <span class="sep">/</span>
+            <a href="practice.html">模拟考试</a>
+            <span class="sep">/</span>
+            <span id="crumbExam">答题</span>
+        </div>
+        <h1 id="pageTitle">答题中<span class="quiz-mode-badge" id="modeBadge">模式</span></h1>
+        <p class="quiz-exam-title" id="examMeta">载入中…</p>
+    </div>
+</header>
+
+<!-- ===== Quiz Body ===== -->
+<section class="section" style="padding-top: 20px; padding-bottom: 80px;">
+    <div class="container">
+        <div class="quiz-container">
+
+            <!-- Quiz header (progress / timer) -->
+            <div class="quiz-header" id="quizHeader">
+                <div class="quiz-progress">
+                    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progressFill" style="width:0%"></div></div>
+                    <div class="quiz-progress-text" id="progressText">0 / 0</div>
+                </div>
+                <div class="quiz-timer" id="quizTimer">--:--</div>
+            </div>
+
+            <!-- Question area -->
+            <div id="questionArea"></div>
+
+            <!-- Navigation -->
+            <div class="quiz-nav" id="quizNav" style="display:none;">
+                <button class="quiz-nav-btn" id="prevBtn">← 上一题</button>
+                <div style="display:flex;gap:12px;">
+                    <button class="quiz-nav-btn" id="reviewBtn" style="display:none;">题号导航</button>
+                    <button class="quiz-nav-btn primary" id="actionBtn">下一题 →</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="footer"></footer>
+
+<script src="app.js"></script>
+<script src="acp-quiz/questions-data.js"></script>
+<script src="ess_acp_questions.js"></script>
+<script src="vpc_practice_questions.js"></script>
+<script src="questions-bank.js"></script>
+<script>
+/* ============================================================
+ * 云忍者 — 阿里云认证答题系统
+ * 支持练习模式（即时反馈）与考试模式（计时统一批改）
+ * ============================================================ */
+
+/* ===== 认证元信息 ===== */
+const EXAM_META = {
+    'aca-cloud':       { name: '云计算助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
+    'aca-security':    { name: '云安全助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
+    'aca-cloudnative': { name: '云原生助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
+    'aca-llm':         { name: '大模型助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
+    'acp-cloud':       { name: '云计算高级工程师',        level: 'ACP', qcount: 100, duration: 120 },
+    'acp-security':    { name: '云安全高级工程师',        level: 'ACP', qcount: 100, duration: 120 },
+    'acp-container':   { name: '云原生容器高级工程师',    level: 'ACP', qcount: 100, duration: 120 },
+    'acp-devops':      { name: 'DevOps 高级工程师',       level: 'ACP', qcount: 100, duration: 120 },
+    'acp-llm':         { name: '大模型高级工程师',        level: 'ACP', qcount: 100, duration: 120 },
+    'ace-cloud':       { name: '云计算专家工程师',        level: 'ACE', qcount: 100, duration: 120 },
+    'ace-security':    { name: '云安全专家工程师',        level: 'ACE', qcount: 100, duration: 120 }
+};
+
+/* ===== 精选题库（手工编写 · 真实阿里云知识点） ===== */
+const ORIGINAL_QUESTIONS = [
+    {
+        id: 'q01',
+        topic: 'ECS',
+        difficulty: '中等',
+        type: '单选题',
+        question: '在阿里云 ECS 中，为核心数据库场景选择块存储类型时，要求最高随机 IOPS 与超低延迟。以下哪种云盘产品最合适？',
+        options: [
+            '普通云盘（HDD）',
+            'SSD 云盘',
+            'ESSD PL3 云盘（增强型 SSD 最高性能级别）',
+            '本地 NVMe SSD 盘'
+        ],
+        correctAnswer: 2,
+        explanation: 'ESSD（Enhanced SSD）基于新一代分布式块存储架构，按性能级别分为 PL0/PL1/PL2/PL3 四档。PL3 最高可提供 100 万 IOPS 与 4 GB/s 吞吐、亚毫秒级延迟，是核心数据库（如 MySQL、Oracle、SAP HANA）等对性能要求极高场景的首选。SSD 云盘性能上限远低于 ESSD PL3；普通云盘基于 HDD，不适合高 IO 数据库；本地 NVMe 虽快但数据可靠性不如云盘（不支持随时扩容与快照），且实例释放后数据丢失，不建议作为唯一存储。',
+        ref: 'help.aliyun.com/zh/ecs/user-guide/块存储/ESSD云盘/'
+    },
+    {
+        id: 'q02',
+        topic: 'OSS',
+        difficulty: '简单',
+        type: '单选题',
+        question: '某企业需长期保存合规审计日志，数据极少访问，要求存储成本最低，且可接受分钟级以上的取回延迟。以下 OSS 存储类型最合适的是？',
+        options: [
+            '标准存储（Standard）',
+            '低频访问存储（IA）',
+            '归档存储（Archive）',
+            '冷归档存储（Cold Archive）'
+        ],
+        correctAnswer: 3,
+        explanation: 'OSS 提供多级存储：标准存储访问频繁、价格最高；低频访问存储适合每月访问 1~2 次的数据；归档存储适合长期保存、季度访问的数据，需解冻（分钟级）；冷归档存储适合超长期合规归档、几乎不访问的数据，存储单价最低，但取回需解冻且耗时较长（小时级）。合规审计日志"极少访问、成本最低、可接受较长取回延迟"完全匹配冷归档存储。若对取回时效有要求可考虑归档存储。',
+        ref: 'help.aliyun.com/zh/oss/user-guide/存储类型/'
+    },
+    {
+        id: 'q03',
+        topic: 'VPC',
+        difficulty: '中等',
+        type: '单选题',
+        question: '在阿里云专有网络 VPC 中创建交换机（VSwitch）时，关于 CIDR 网段规划，以下说法正确的是？',
+        options: [
+            '交换机网段必须与所属 VPC 的 CIDR 完全相同',
+            '交换机网段必须在所属 VPC 的 CIDR 范围内，且与同 VPC 其他交换机网段不重叠',
+            '交换机网段可以与 VPC 网段重叠，以提高地址利用率',
+            '交换机网段不受 VPC CIDR 限制，可任意配置'
+        ],
+        correctAnswer: 1,
+        explanation: '交换机（VSwitch）是 VPC 内的二级网络划分，其 CIDR 必须是所属 VPC CIDR 的子集，且同一 VPC 下不同交换机的网段不能重叠。交换机网段大小需在 /16 到 /29 之间（IPv4）。规划时建议为未来扩容预留地址，例如 VPC 使用 /16，交换机使用 /19 或 /20，避免地址耗尽。此外交换机网段也不能与需要对等连接、VPN 打通的对端网段冲突。',
+        ref: 'help.aliyun.com/zh/vpc/user-guide/使用交换机/'
+    },
+    {
+        id: 'q04',
+        topic: 'RDS',
+        difficulty: '中等',
+        type: '单选题',
+        question: '关于阿里云 RDS MySQL 高可用版（主备实例）的架构与容灾，以下说法正确的是？',
+        options: [
+            '主备实例通过物理机直接复制磁盘实现，无任何数据延迟',
+            '主备实例必须部署在同一可用区以保证最低同步延迟',
+            '主备实例通过基于日志（Binlog）的同步或半同步复制，主库故障时自动切换到备库',
+            '主备实例对外使用同一个弹性公网 IP 提供服务'
+        ],
+        correctAnswer: 2,
+        explanation: '阿里云 RDS 高可用版采用主备双节点架构，通过 Binlog 日志的同步复制（半同步/异步可配置）保持主备数据一致。当主库发生故障时，系统会自动检测并将备库提升为主库，应用通过相同的连接地址（主库连接地址不变，基于 VIP/实例连接串）访问，实现秒级到分钟级的故障切换。主备实例通常部署在不同可用区以提升可用性；同步复制会存在极小的复制延迟（毫秒级）；RDS 对内提供服务一般通过内网地址，不依赖单一 EIP。',
+        ref: 'help.aliyun.com/zh/rds/产品简介/高可用版/'
+    },
+    {
+        id: 'q05',
+        topic: 'SLB',
+        difficulty: '简单',
+        type: '单选题',
+        question: '在阿里云传统型负载均衡 SLB（CLB）中，需要根据后端服务器的权重和"当前连接数"进行请求分配，以适合长连接（如 TCP、数据库代理）场景。应选择以下哪种调度算法？',
+        options: [
+            '轮询（Round Robin, RR）',
+            '加权轮询（Weighted Round Robin, WRR）',
+            '加权最小连接数（Weighted Least Connection, WLC）',
+            '一致性哈希（Consistent Hashing, SCH）'
+        ],
+        correctAnswer: 2,
+        explanation: 'SLB 支持多种调度算法：轮询（RR）按顺序依次分发；加权轮询（WRR）按权重比例分发，不考虑已有连接数，适合短连接/HTTP；加权最小连接数（WLC）综合考虑权重和后端服务器当前的连接数，把请求分发到连接数相对最少的服务器，适合 TCP/长连接场景；一致性哈希（SCH）适用于需保持会话亲和的场景。长连接场景应选 WLC，避免单台服务器连接堆积。',
+        ref: 'help.aliyun.com/zh/slb/user-guide/监听/调度算法/'
+    },
+    {
+        id: 'q06',
+        topic: '安全组',
+        difficulty: '简单',
+        type: '单选题',
+        question: '关于阿里云 ECS 安全组规则，以下说法正确的是？',
+        options: [
+            '安全组是无状态的，必须同时显式配置入方向和出方向规则才能让响应流量通过',
+            '安全组是有状态的，允许出站的请求其响应流量会自动允许入站，无需额外配置',
+            '安全组规则的优先级数字越大优先级越高',
+            '一个 ECS 实例只能加入一个安全组'
+        ],
+        correctAnswer: 1,
+        explanation: '阿里云安全组是有状态的：允许出站的请求，其响应流量会自动放行入站，无需额外配置入方向规则；同理允许入站的请求其响应也自动放行。安全组规则按"允许"语义工作（仅支持允许规则，默认拒绝），规则按协议+端口+授权对象匹配。一个 ECS 实例可加入多个安全组（最多 5 个，可申请提升），规则取所有安全组规则的并集。优先级方面，自定义规则的优先级由系统按授权策略排序，并非数字越大越高。',
+        ref: 'help.aliyun.com/zh/ecs/user-guide/安全组/'
+    },
+    {
+        id: 'q07',
+        topic: 'OSS',
+        difficulty: '中等',
+        type: '单选题',
+        question: '某用户希望对 OSS Bucket 中的访问日志文件实现自动分层：上传 30 天后转为低频访问存储，180 天后转为归档存储，365 天后彻底删除。应使用以下哪个功能？',
+        options: [
+            '跨区域复制（Cross-Region Replication, CRR）',
+            '生命周期规则（Lifecycle）',
+            '版本控制（Versioning）',
+            '镜像回源（Mirror Back-to-Source）'
+        ],
+        correctAnswer: 1,
+        explanation: 'OSS 生命周期规则（Lifecycle Rule）支持按 Object 前缀和标签匹配，自动进行存储类型转换（如标准→低频→归档→冷归档）与过期删除，是数据分层与自动清理的标准方案。题目中的"30 天转 IA、180 天转归档、365 天删除"正是典型的生命周期规则配置。跨区域复制用于异地容灾；版本控制用于保留历史版本防止误删；镜像回源用于回源拉取 Object。三者均不能实现按时间自动分层删除。',
+        ref: 'help.aliyun.com/zh/oss/user-guide/生命周期/'
+    },
+    {
+        id: 'q08',
+        topic: '云监控',
+        difficulty: '中等',
+        type: '单选题',
+        question: '关于阿里云云监控（CloudMonitor, CMS）的自定义监控，以下说法正确的是？',
+        options: [
+            '自定义监控必须为每台 ECS 实例安装云监控插件后才能通过 API 上报指标',
+            '通过调用云监控 OpenAPI（PutMetricData）或 CMS Agent 上报自定义指标，指标维度可按业务/应用灵活定义',
+            '自定义监控仅支持按 ECS 主机维度上报，不支持按业务或应用维度上报',
+            '自定义监控指标数据无法配置报警规则'
+        ],
+        correctAnswer: 1,
+        explanation: '云监控自定义监控允许用户通过 OpenAPI（PutMetricData）、SDK 或 CMS Agent（云监控插件）上报自定义指标，指标维度（如实例、应用、业务、队列）由用户自行定义，不局限于主机维度。云监控插件（CMS Agent）主要用于采集系统级指标，但自定义指标更常用的方式是业务程序直接调用 OpenAPI 上报，无需为每台机器单独安装。上报的指标可直接在云监控控制台查看并配置阈值报警、钉钉/短信/邮件通知等。',
+        ref: 'help.aliyun.com/zh/cms/user-guide/自定义监控/'
+    },
+    {
+        id: 'q09',
+        topic: '弹性伸缩',
+        difficulty: '中等',
+        type: '单选题',
+        question: '在阿里云弹性伸缩（Auto Scaling, ESS）中，伸缩组的冷却时间（Cooldown）对以下哪类伸缩活动生效？',
+        options: [
+            '对所有伸缩活动均生效，包括定时任务、手动触发与报警触发',
+            '仅对云监控报警任务触发的伸缩活动生效，定时任务和手动触发的伸缩活动不受其限制',
+            '仅对定时任务触发的伸缩活动生效',
+            '仅对手动触发的伸缩活动生效'
+        ],
+        correctAnswer: 1,
+        explanation: '弹性伸缩冷却时间仅在云监控报警任务触发的伸缩活动时生效：报警触发一次伸缩规则后，伸缩组进入冷却时间，期间报警任务再次触发的伸缩活动会被跳过，避免指标抖动导致频繁扩缩容。定时任务和手动触发的伸缩活动不受冷却时间限制，以保证定时任务能在预定时间准确执行。冷却时间默认值为 300 秒，取值范围 0~86400 秒。',
+        ref: 'help.aliyun.com/zh/ess/user-guide/冷却时间/'
+    },
+    {
+        id: 'q10',
+        topic: 'RAM',
+        difficulty: '中等',
+        type: '单选题',
+        question: '关于阿里云访问控制（RAM）的权限策略，以下说法正确的是？',
+        options: [
+            '系统策略（System Policy）可以由用户自由修改以适应业务需求',
+            '自定义策略通过 JSON 语法定义，支持 Effect、Action、Resource、Condition 等元素',
+            '一个 RAM 用户只能绑定一个权限策略',
+            'RAM 角色不能被 ECS 实例扮演，仅用于跨账号访问'
+        ],
+        correctAnswer: 1,
+        explanation: 'RAM 权限策略分为系统策略与自定义策略：系统策略由阿里云提供，不可修改，只能直接附加；自定义策略使用 JSON 语法定义，核心元素包括 Effect（Allow/Deny）、Action（操作）、Resource（资源 ARN）、Condition（条件，如 IP、时间、MFA 等）。一个 RAM 用户/角色可绑定多个策略，最终权限取所有策略的并集（Deny 优先）。RAM 角色既可用于跨账号访问，也可被 ECS 实例扮演（实例 RAM 角色），让实例内的应用通过元数据服务获取临时凭证访问云资源，无需在实例中固化 AccessKey。',
+        ref: 'help.aliyun.com/zh/ram/user-guide/权限策略/'
+    },
+    {
+        id: 'q11',
+        topic: 'NAT网关',
+        difficulty: '中等',
+        type: '单选题',
+        question: '关于阿里云 NAT 网关的 SNAT 与 DNAT 功能，以下说法正确的是？',
+        options: [
+            'SNAT 用于提供公网入口访问 VPC 内 ECS，DNAT 用于 VPC 内 ECS 访问公网',
+            'SNAT 为 VPC 内无公网 IP 的 ECS 提供访问公网的能力，DNAT 将公网 IP 端口映射到 VPC 内 ECS 提供入口访问',
+            'SNAT 和 DNAT 都只能用于 VPC 内 ECS 主动访问公网',
+            'DNAT 可将一个公网 IP 同时映射到多台 ECS 以实现负载均衡'
+        ],
+        correctAnswer: 1,
+        explanation: 'NAT 网关提供两类地址转换：SNAT（源地址转换）为 VPC 内无公网 IP 的 ECS 提供访问公网的能力，多台 ECS 共用一个 NAT 网关的公网 IP 出网，隐藏内网结构并节省 EIP；DNAT（目的地址转换）将 NAT 网关上的公网 IP + 端口映射到 VPC 内 ECS 的私网 IP + 端口，用于让公网主动访问 VPC 内服务（如对外提供 API、SSH 登录）。DNAT 是 1 对 1 映射到单台 ECS，不提供负载均衡能力（负载均衡由 SLB/ALB 实现）。',
+        ref: 'help.aliyun.com/zh/vpc/user-guide/NAT网关/'
+    },
+    {
+        id: 'q12',
+        topic: '快照',
+        difficulty: '简单',
+        type: '单选题',
+        question: '关于阿里云 ECS 云盘快照（Snapshot），以下说法正确的是？',
+        options: [
+            '快照是云盘某一时刻的数据副本，可用于创建新云盘或回滚云盘数据',
+            '快照会持续占用与原云盘相同的存储空间，备份成本极高',
+            '快照只能回滚创建它的同一块云盘，不能用于创建新云盘',
+            '创建快照前必须停止 ECS 实例，否则快照无法创建'
+        ],
+        correctAnswer: 0,
+        explanation: '快照是云盘数据在某一时刻的状态备份，可用于创建新云盘（克隆数据）、回滚云盘到历史状态、跨可用区/地域复制数据等。阿里云快照采用增量备份机制，仅保存自上次快照以来变化的数据块，存储成本远低于全量备份，且无需停机即可创建（运行中实例可在线创建快照，建议在业务低峰期创建以保证数据一致性）。快照不仅能回滚原云盘，也能用于创建新云盘迁移数据。',
+        ref: 'help.aliyun.com/zh/ecs/user-guide/快照/'
+    }
+];
+
+/* ===== 运行状态 ===== */
+const state = {
+    examCode: null,
+    mode: 'practice',
+    currentIndex: 0,
+    userAnswers: [],
+    submitted: [],
+    finished: false,
+    timeLeft: 0,
+    timerId: null,
+    questions: []
+};
+
+/* ===== 工具函数 ===== */
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(window.location.search);
+const formatTime = (s) => {
+    const m = Math.floor(s / 60).toString().padStart(2, '0');
+    const sec = (s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+};
+
+const isAnswerCorrect = (q, ua) => {
+    if (!ua || ua.length === 0) return false;
+    if (q.type === '多选题') {
+        if (ua.length !== q.correctAnswers.length) return false;
+        return ua.every(a => q.correctAnswers.includes(a));
+    }
+    return ua[0] === q.correctAnswers[0];
+};
+
+/* ===== 初始化 ===== */
+function init() {
+    state.examCode = params.get('exam') || 'aca-cloud';
+    state.mode = (params.get('mode') === 'exam') ? 'exam' : 'practice';
+
+    const meta = EXAM_META[state.examCode] || { name: '通用模拟考试', level: 'ACA', qcount: 50, duration: 60 };
+
+    state.questions = getQuestionsForExam(state.examCode, ORIGINAL_QUESTIONS);
+    const Qs = state.questions;
+    const topics = [...new Set(Qs.map(q => q.topic))].join(' / ');
+
+    $('crumbExam').textContent = meta.name;
+    $('pageTitle').innerHTML = `${meta.name}<span class="quiz-mode-badge ${state.mode}" id="modeBadge">${state.mode === 'practice' ? '练习模式' : '考试模式'}</span>`;
+    const levelClass = meta.level === 'ACA' ? 'level-aca' : meta.level === 'ACP' ? 'level-acp' : 'level-ace';
+    $('examMeta').innerHTML = `<span class="cert-level ${levelClass}">${meta.level}</span> &nbsp; 本场题数：<strong>${Qs.length}</strong> 题 &nbsp;·&nbsp; 知识域：${topics}`;
+
+    state.userAnswers = new Array(Qs.length).fill(null);
+    state.submitted = new Array(Qs.length).fill(false);
+    state.currentIndex = 0;
+
+    const timerEl = $('quizTimer');
+    if (state.mode === 'exam') {
+        state.timeLeft = Math.round(meta.duration * 60 * Qs.length / meta.qcount);
+        timerEl.textContent = formatTime(state.timeLeft);
+        startTimer();
+    } else {
+        timerEl.textContent = '不计时';
+        timerEl.classList.add('no-timer');
+    }
+
+    $('quizNav').style.display = 'flex';
+    renderQuestion();
+    updateProgress();
+    bindNav();
+}
+
+/* ===== 计时器 ===== */
+function startTimer() {
+    if (state.timerId) clearInterval(state.timerId);
+    state.timerId = setInterval(() => {
+        state.timeLeft--;
+        const el = $('quizTimer');
+        el.textContent = formatTime(state.timeLeft);
+        el.classList.toggle('warning', state.timeLeft <= 300 && state.timeLeft > 60);
+        el.classList.toggle('danger', state.timeLeft <= 60);
+        if (state.timeLeft <= 0) {
+            clearInterval(state.timerId);
+            alert('考试时间到，系统将自动交卷。');
+            finishExam(true);
+        }
+    }, 1000);
+}
+
+/* ===== 渲染当前题目 ===== */
+function renderQuestion() {
+    const i = state.currentIndex;
+    const q = state.questions[i];
+    const ua = state.userAnswers[i];
+    const isSubmitted = state.submitted[i];
+    const showResult = isSubmitted || state.finished;
+
+    const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+    let optionsHTML = '';
+    q.options.forEach((opt, idx) => {
+        let cls = 'quiz-option';
+        const isSelected = ua && ua.includes(idx);
+        if (showResult) {
+            cls += ' disabled';
+            if (q.correctAnswers.includes(idx)) cls += ' correct';
+            if (isSelected && !q.correctAnswers.includes(idx)) cls += ' wrong';
+        } else if (isSelected) {
+            cls += ' selected';
+        }
+        optionsHTML += `
+            <div class="${cls}" data-idx="${idx}" onclick="selectOption(${idx})">
+                <span class="key">${optionLetters[idx]}</span>
+                <span>${opt}</span>
+            </div>`;
+    });
+
+    let explanationHTML = '';
+    if (showResult) {
+        const correct = isAnswerCorrect(q, ua);
+        const correctLetters = q.correctAnswers.map(a => optionLetters[a]).join('、');
+        explanationHTML = `
+            <div class="quiz-explanation">
+                <h4>${correct ? '回答正确' : '回答错误'} · 正确答案：${correctLetters}</h4>
+                <p>${q.explanation}</p>
+                <div class="ref">📖 参考：${q.ref}</div>
+            </div>`;
+    }
+
+    const diffColor = q.difficulty === '简单' ? 'var(--green)' : q.difficulty === '中等' ? 'var(--warm)' : 'var(--red)';
+
+    $('questionArea').innerHTML = `
+        <div class="quiz-question">
+            <div class="quiz-q-meta">
+                <span class="quiz-q-tag difficulty" style="color:${diffColor}">${q.difficulty}</span>
+                <span class="quiz-q-tag topic">${q.topic}</span>
+                <span class="quiz-q-tag type">${q.type}</span>
+                <span class="quiz-q-number">第 ${i + 1} 题 / 共 ${state.questions.length} 题</span>
+            </div>
+            <h2>${q.question}</h2>
+            <div class="quiz-options">${optionsHTML}</div>
+            ${explanationHTML}
+        </div>`;
+
+    updateNavButtons();
+}
+
+/* ===== 选择选项 ===== */
+function selectOption(idx) {
+    const i = state.currentIndex;
+    if (state.submitted[i] || state.finished) return;
+    const q = state.questions[i];
+    if (q.type === '多选题') {
+        if (!state.userAnswers[i]) state.userAnswers[i] = [];
+        const pos = state.userAnswers[i].indexOf(idx);
+        if (pos >= 0) {
+            state.userAnswers[i].splice(pos, 1);
+            if (state.userAnswers[i].length === 0) state.userAnswers[i] = null;
+        } else {
+            state.userAnswers[i].push(idx);
+        }
+    } else {
+        state.userAnswers[i] = [idx];
+    }
+    renderQuestion();
+    updateProgress();
+}
+
+/* ===== 进度条 ===== */
+function updateProgress() {
+    const total = state.questions.length;
+    const answered = state.userAnswers.filter(a => a && a.length > 0).length;
+    const pct = (answered / total) * 100;
+    $('progressFill').style.width = pct + '%';
+    $('progressText').textContent = `已答 ${answered} / ${total}`;
+}
+
+/* ===== 导航按钮 ===== */
+function updateNavButtons() {
+    const i = state.currentIndex;
+    const last = state.questions.length - 1;
+    $('prevBtn').disabled = (i === 0);
+
+    const actionBtn = $('actionBtn');
+    const reviewBtn = $('reviewBtn');
+    reviewBtn.style.display = 'none';
+
+    if (state.finished) {
+        reviewBtn.style.display = '';
+        reviewBtn.textContent = '← 返回成绩单';
+        reviewBtn.onclick = () => renderResults();
+        actionBtn.textContent = (i === last) ? '已是最后一题' : '下一题 →';
+        actionBtn.disabled = (i === last);
+        return;
+    }
+
+    if (state.mode === 'practice') {
+        if (!state.submitted[i]) {
+            actionBtn.textContent = '提交本题 ✓';
+            actionBtn.disabled = (!state.userAnswers[i] || state.userAnswers[i].length === 0);
+        } else {
+            if (i === last) {
+                actionBtn.textContent = '查看成绩 📊';
+            } else {
+                actionBtn.textContent = '下一题 →';
+            }
+            actionBtn.disabled = false;
+        }
+    } else {
+        if (i === last) {
+            actionBtn.textContent = '交卷 📤';
+        } else {
+            actionBtn.textContent = '下一题 →';
+        }
+        actionBtn.disabled = false;
+    }
+}
+
+/* ===== 绑定导航 ===== */
+function bindNav() {
+    $('prevBtn').addEventListener('click', () => {
+        if (state.currentIndex > 0) {
+            state.currentIndex--;
+            renderQuestion();
+        }
+    });
+
+    $('actionBtn').addEventListener('click', () => {
+        const i = state.currentIndex;
+        const last = state.questions.length - 1;
+
+        if (state.finished) {
+            if (i === last) {
+                renderResults();
+            } else {
+                state.currentIndex++;
+                renderQuestion();
+            }
+            return;
+        }
+
+        if (state.mode === 'practice') {
+            if (!state.submitted[i]) {
+                if (!state.userAnswers[i] || state.userAnswers[i].length === 0) return;
+                state.submitted[i] = true;
+                renderQuestion();
+            } else {
+                if (i === last) {
+                    finishExam(false);
+                } else {
+                    state.currentIndex++;
+                    renderQuestion();
+                }
+            }
+        } else {
+            if (i === last) {
+                const unanswered = state.userAnswers.filter(a => !a || a.length === 0).length;
+                if (unanswered > 0) {
+                    if (!confirm(`还有 ${unanswered} 题未作答，确定交卷吗？`)) return;
+                } else {
+                    if (!confirm('确定交卷吗？交卷后将统一批改并显示成绩。')) return;
+                }
+                finishExam(false);
+            } else {
+                state.currentIndex++;
+                renderQuestion();
+            }
+        }
+    });
+}
+
+/* ===== 交卷 / 显示成绩 ===== */
+function finishExam(auto) {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+    // 交卷后所有题进入"已批改"状态，renderQuestion 依据 state.finished 展示正确/错误与解析
+    state.finished = true;
+    renderResults();
+}
+
+/* ===== 成绩单 ===== */
+function renderResults() {
+    const total = state.questions.length;
+    let correct = 0, wrong = 0, blank = 0;
+    state.questions.forEach((q, i) => {
+        const ua = state.userAnswers[i];
+        if (!ua || ua.length === 0) blank++;
+        else if (isAnswerCorrect(q, ua)) correct++;
+        else wrong++;
+    });
+    const unanswered = state.userAnswers.filter(a => !a || a.length === 0).length;
+
+    const score = Math.round((correct / total) * 100);
+    const pct = score;
+    const passed = score >= 80;
+
+    const r = 90;
+    const circ = 2 * Math.PI * r;
+    const offset = circ * (1 - pct / 100);
+    const ringColor = passed ? 'var(--green)' : (score >= 60 ? 'var(--accent)' : 'var(--red)');
+    const verdict = passed
+        ? `恭喜，你的成绩已达到阿里云认证通过线（80 分），继续保持！`
+        : (score >= 60
+            ? `成绩接近通过线，再针对薄弱知识点加强练习即可通关。`
+            : `成绩未达通过线，建议回到练习模式逐题突破并复习相关官方文档。`);
+
+    const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+    let pillsHTML = '';
+    state.questions.forEach((q, i) => {
+        const ua = state.userAnswers[i];
+        let pcls = 'quiz-review-pill';
+        let title = `第 ${i + 1} 题`;
+        if (!ua || ua.length === 0) {
+            pcls += ' wrong';
+            title += ' · 未作答';
+        } else if (isAnswerCorrect(q, ua)) {
+            pcls += ' correct';
+            title += ' · 正确';
+        } else {
+            pcls += ' wrong';
+            const userLetters = ua.map(a => optionLetters[a]).join('');
+            const correctLetters = q.correctAnswers.map(a => optionLetters[a]).join('');
+            title += ` · 错误（你选 ${userLetters}，正确 ${correctLetters}）`;
+        }
+        pillsHTML += `<div class="${pcls}" title="${title}" onclick="jumpTo(${i})">${i + 1}</div>`;
+    });
+
+    $('quizNav').style.display = 'none';
+    $('questionArea').innerHTML = `
+        <div class="quiz-results">
+            <div class="score-ring">
+                <svg width="200" height="200">
+                    <circle class="bg" cx="100" cy="100" r="${r}" fill="none" stroke-width="12"></circle>
+                    <circle class="fg" cx="100" cy="100" r="${r}" fill="none" stroke-width="12"
+                        stroke-linecap="round"
+                        stroke-dasharray="${circ}"
+                        stroke-dashoffset="${circ}"
+                        style="stroke:${ringColor};"></circle>
+                </svg>
+                <div class="score-text">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-label">/ 100 分</div>
+                </div>
+            </div>
+            <h2>${passed ? '通关达成' : '继续努力'}</h2>
+            <p class="verdict">${verdict}</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-num" style="color:var(--green)">${correct}</div>
+                    <div class="stat-label">答对</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" style="color:var(--red)">${wrong + unanswered}</div>
+                    <div class="stat-label">答错 / 未答</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">${total}</div>
+                    <div class="stat-label">总题数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" style="color:${passed ? 'var(--green)' : 'var(--warm)'}">${passed ? '通过' : '未通过'}</div>
+                    <div class="stat-label">评定</div>
+                </div>
+            </div>
+
+            <div style="font-size:14px;color:var(--text-2);margin-bottom:8px;">点击题号可查看每题解析</div>
+            <div class="quiz-review-list">${pillsHTML}</div>
+
+            <div class="actions">
+                <a class="quiz-nav-btn primary" href="quiz.html?exam=${state.examCode}&mode=practice">重做（练习模式）</a>
+                <a class="quiz-nav-btn" href="quiz.html?exam=${state.examCode}&mode=exam">重做（考试模式）</a>
+                <a class="quiz-nav-btn" href="practice.html">返回考试列表</a>
+            </div>
+        </div>`;
+
+    // 分数动画 + 环形进度条动画
+    animateScore(score);
+    animateRing(offset);
+}
+
+function animateScore(target) {
+    const el = $('scoreNumber');
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 40));
+    const t = setInterval(() => {
+        cur += step;
+        if (cur >= target) { cur = target; clearInterval(t); }
+        el.textContent = cur;
+    }, 30);
+}
+
+function animateRing(finalOffset) {
+    // 环形进度条：初始 stroke-dashoffset 为满偏移（空环），动画到最终偏移
+    const fg = document.querySelector('.quiz-results .score-ring .fg');
+    if (!fg) return;
+    // 强制重排以触发 CSS transition
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            fg.style.strokeDashoffset = finalOffset;
+        });
+    });
+}
+
+/* ===== 题号回顾跳转 ===== */
+function jumpTo(idx) {
+    state.currentIndex = idx;
+    renderQuestion();
+    // 查看模式下保留导航条，便于前后翻阅与返回成绩单
+    $('quizNav').style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ===== 启动 ===== */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
