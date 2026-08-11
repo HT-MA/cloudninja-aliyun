@@ -1,15 +1,15 @@
 # 云忍者 CloudNinja — 阿里云认证模拟考试平台
 
-免费开源的阿里云认证在线备考平台，覆盖 **ACA / ACP / ACE** 全部认证方向，提供模拟考试、在线答题、认证指南与学习游戏。
+免费开源的阿里云认证在线备考平台，覆盖 **ACA / ACP / ACE** 三级认证体系，提供模拟考试、在线答题、认证指南与学习游戏。
 
 ## ✨ 功能特性
 
 ### 模拟考试系统
-- **11 个认证方向**：ACA（云计算 / 云安全 / 云原生 / 大模型）、ACP（云计算 / 云安全 / 容器 / DevOps / 大模型）、ACE（云计算 / 云安全）
+- **7 个认证方向**：ACA（云计算 / 云安全）、ACP（云计算 / 云安全 / DevOps）、ACE（云计算 / 云安全）
 - **两种答题模式**：
   - **练习模式**：即时反馈，每题提交后显示正确答案与详细解析
   - **考试模式**：计时答题，统一批改，成绩单可视化
-- **190+ 真实题库**：覆盖 ECS、OSS、VPC、RDS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN 等核心知识点
+- **172 道去重题库**：覆盖 ECS、OSS、VPC、RDS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN 等核心知识点
 - **三种题型**：单选题、多选题、判断题
 
 ### 主题切换
@@ -42,9 +42,7 @@ cloudninja-aliyun/
 ├── contact.html            # 联系
 ├── style.css               # 全局样式 + 主题变量
 ├── app.js                  # 导航、页脚、主题切换（共享）
-├── questions-bank.js       # 统一题库加载器
-├── ess_acp_questions.js    # 弹性伸缩题库（17 题）
-├── vpc_practice_questions.js # VPC 题库（15 题）
+├── questions-bank.js       # 统一题库加载器（合并 + 去重）
 └── acp-quiz/
     └── questions-data.js   # 主题库（160 题）
 ```
@@ -71,15 +69,14 @@ python -m http.server 8080
 
 ## 📝 题库说明
 
-题库数据位于三个 JavaScript 文件中：
+题库数据位于以下文件中：
 
 | 文件 | 题数 | 覆盖模块 |
 |------|------|---------|
 | `acp-quiz/questions-data.js` | 160 | ECS、SLB、OSS、VPC、云安全、弹性伸缩、CDN、云计算通用 |
-| `ess_acp_questions.js` | 17 | 弹性伸缩（ESS）专项 |
-| `vpc_practice_questions.js` | 15 | 专有网络 VPC 专项 |
+| `quiz.html`（内联精选题） | 12 | ECS、OSS、VPC、RDS、SLB、安全组、云监控、弹性伸缩、RAM、NAT 网关、快照 |
 
-`questions-bank.js` 负责合并所有题库，按认证方向筛选知识点，随机抽取 50 题组成一场考试。
+`questions-bank.js` 负责合并所有题库并按题目文本自动去重，按认证方向筛选知识点，随机抽取 50 题组成一场考试，确保同一场考试不会出现重复题。
 
 每道题包含：
 - `question`：题干
