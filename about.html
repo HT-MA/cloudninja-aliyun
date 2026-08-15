@@ -53,7 +53,7 @@
             .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
-<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
 </head>
 <body>
 

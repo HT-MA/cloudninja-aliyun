@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
 </head>
 <body>
     <div class="bg-grid"></div>
@@ -20,6 +20,7 @@
 
     <footer id="footer"></footer>
 
+    <script src="exam-config.js"></script>
     <script>
     // ===================================================================
     // 阿里云认证数据库 — 20 项认证完整信息
@@ -34,7 +35,7 @@
             category: 'cloud',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '面向云计算初学者的入门级认证，涵盖阿里云核心产品与基础架构知识。',
             domains: [
@@ -81,7 +82,7 @@
             category: 'security',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '云安全入门级认证，覆盖信息安全基础与阿里云安全产品核心知识。',
             domains: [
@@ -113,7 +114,7 @@
                 '报名：在阿里云认证官网注册并支付 ACA 云安全考试费用',
                 '学习：系统学习信息安全基础和阿里云安全产品矩阵',
                 '实验：在沙箱环境中动手配置安全产品，加深理解',
-                '考试：60 分钟在线考试，50 道选择题，达到 60 分即通过',
+                '考试：60 分钟在线考试，50 道选择题，达到 80 分即通过',
                 '领证：通过后获取电子证书，证书有效期 2 年'
             ],
             career: 'ACA 云安全认证持证者可从事云安全运维、安全运营助理、安全审计助理等岗位。随着网络安全法规趋严，云安全人才需求持续增长。建议在获得经验后考取 ACP 云安全认证，进一步向云安全架构师、安全合规专家方向发展。'
@@ -126,7 +127,7 @@
             category: 'database',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '数据库入门认证，涵盖关系型与非关系型数据库基础及阿里云数据库服务。',
             domains: [
@@ -158,7 +159,7 @@
                 '报名：在阿里云认证官网注册 ACA 云数据库考试',
                 '学习：掌握数据库基础和阿里云数据库产品体系',
                 '实验：创建各类数据库实例，完成迁移与备份操作',
-                '考试：60 分钟完成 50 道选择题，60 分通过',
+                '考试：60 分钟完成 50 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年'
             ],
             career: 'ACA 云数据库认证持证者可从事数据库运维助理、后端开发、DBA 助理等岗位。数据库技能是技术人员的核心竞争力之一，建议继续考取 ACP 云数据库认证，向高级 DBA、数据库架构师方向发展。'
@@ -171,7 +172,7 @@
             category: 'cloudnative',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '云原生入门认证，介绍容器、Kubernetes、Serverless 等核心技术概念。',
             domains: [
@@ -203,7 +204,7 @@
                 '报名：在阿里云认证官网注册 ACA 云原生考试',
                 '学习：掌握云原生理念与核心技术栈基础',
                 '实验：使用 Docker 部署容器，在 ACK 上部署应用',
-                '考试：60 分钟 50 道选择题，60 分通过',
+                '考试：60 分钟 50 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年'
             ],
             career: 'ACA 云原生认证持证者可从事云原生运维助理、DevOps 助理、容器平台运维等岗位。云原生是当前技术发展的核心方向，建议继续考取 ACP 云原生容器认证，向云原生架构师、DevOps 工程师方向发展。'
@@ -216,7 +217,7 @@
             category: 'bigdata',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '大数据入门认证，覆盖数据采集、存储、计算与分析的基础知识。',
             domains: [
@@ -248,7 +249,7 @@
                 '报名：在阿里云认证官网注册 ACA 大数据考试',
                 '学习：系统学习大数据理论和阿里云大数据产品',
                 '实验：完成数据采集、存储、计算全流程操作',
-                '考试：60 分钟 50 道选择题，60 分通过',
+                '考试：60 分钟 50 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年'
             ],
             career: 'ACA 大数据认证持证者可从事数据工程助理、数据分析师助理等岗位。大数据与 AI 融合是行业趋势，建议继续考取 ACP 大数据认证，向大数据架构师、数据专家方向发展。'
@@ -261,7 +262,7 @@
             category: 'ai',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: 'AI 入门认证，涵盖机器学习、深度学习基础及阿里云 AI 产品应用。',
             domains: [
@@ -293,7 +294,7 @@
                 '报名：在阿里云认证官网注册 ACA 人工智能考试',
                 '学习：系统学习 AI 基础理论和阿里云 AI 产品',
                 '实验：在 PAI 平台完成建模与部署实验',
-                '考试：60 分钟 50 道选择题，60 分通过',
+                '考试：60 分钟 50 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年'
             ],
             career: 'ACA 人工智能认证持证者可从事 AI 应用开发助理、数据分析师等岗位。AI 技术发展迅速，建议继续考取 ACP 人工智能认证，并学习大模型相关技术，向 AI 算法工程师、AI 应用架构师方向发展。'
@@ -306,7 +307,7 @@
             category: 'llm',
             duration: '60 分钟',
             questions: '50 题',
-            passScore: '60 分',
+            passScore: '80 分',
             price: '¥200',
             description: '大语言模型入门认证，覆盖大模型基础原理与阿里云通义大模型应用。',
             domains: [
@@ -338,7 +339,7 @@
                 '报名：在阿里云认证官网注册 ACA 大模型考试',
                 '学习：系统学习大模型原理和通义大模型产品体系',
                 '实验：在百炼平台完成大模型应用开发实验',
-                '考试：60 分钟 50 道选择题，60 分通过',
+                '考试：60 分钟 50 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年'
             ],
             career: 'ACA 大模型认证持证者可从事 AI 应用开发、Prompt 工程师、大模型产品运营等岗位。大模型技术正深刻改变各行各业，建议继续考取 ACP 大模型认证，向大模型应用架构师、AI 解决方案专家方向发展。'
@@ -351,9 +352,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'cloud',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '云计算专业级认证，深入考察阿里云架构设计与高级运维能力。',
             domains: [
@@ -388,7 +389,7 @@
                 '报名：在阿里云认证官网注册 ACP 云计算考试，支付 ¥1200 考试费',
                 '学习：系统学习各知识域，完成官方推荐实验和架构案例分析',
                 '实验：搭建完整的高可用架构，完成网络、存储、安全全链路配置',
-                '考试：90 分钟完成 70 道选择题，70 分通过',
+                '考试：120 分钟完成 100 道选择题，80 分通过',
                 '领证：通过后 5-7 个工作日获取电子证书，有效期 2 年',
                 '续证：证书到期前通过续证考试或完成继续教育学分'
             ],
@@ -400,9 +401,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'security',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '云安全专业级认证，深入考察安全架构设计与阿里云安全产品高级应用。',
             domains: [
@@ -436,7 +437,7 @@
                 '报名：在阿里云认证官网注册 ACP 云安全考试，支付考试费用',
                 '学习：系统学习安全架构和各安全产品高级功能',
                 '实验：搭建多层安全防护架构，完成安全事件响应演练',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：通过后获取电子证书，有效期 2 年',
                 '续证：关注安全威胁新趋势，定期更新安全知识与技能'
             ],
@@ -448,9 +449,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'database',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '数据库专业级认证，深入考察阿里云数据库高级特性与架构设计。',
             domains: [
@@ -484,7 +485,7 @@
                 '报名：在阿里云认证官网注册 ACP 云数据库考试',
                 '学习：深入各数据库产品架构原理与高级特性',
                 '实验：搭建高可用数据库架构，完成迁移与性能调优实验',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪数据库技术发展，持续学习新型数据库产品'
             ],
@@ -496,9 +497,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'cloudnative',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '容器专业级认证，深入考察 Kubernetes 与阿里云容器服务高级应用。',
             domains: [
@@ -532,7 +533,7 @@
                 '报名：在阿里云认证官网注册 ACP 云原生容器考试',
                 '学习：深入 Kubernetes 核心机制和 ACK 高级功能',
                 '实验：在 ACK 上部署完整微服务架构，配置服务网格',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪 CNCF 生态发展，持续学习新工具和最佳实践'
             ],
@@ -544,9 +545,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'microservice',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '微服务专业级认证，深入考察微服务架构设计与阿里云微服务引擎应用。',
             domains: [
@@ -580,7 +581,7 @@
                 '报名：在阿里云认证官网注册 ACP 微服务考试',
                 '学习：深入微服务架构设计和各治理组件原理',
                 '实验：搭建完整微服务项目，完成治理与分布式事务配置',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪微服务技术生态演进，学习 Service Mesh 等新技术'
             ],
@@ -592,9 +593,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'bigdata',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '大数据专业级认证，深入考察阿里云大数据平台架构与开发能力。',
             domains: [
@@ -628,7 +629,7 @@
                 '报名：在阿里云认证官网注册 ACP 大数据考试',
                 '学习：深入各大数据产品开发能力和架构设计原则',
                 '实验：构建完整数仓 ETL 链路和实时数据处理管道',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪大数据技术发展，学习实时数仓和数据湖新方案'
             ],
@@ -640,9 +641,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'ai',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: 'AI 专业级认证，深入考察机器学习算法与阿里云 PAI 平台开发能力。',
             domains: [
@@ -676,7 +677,7 @@
                 '报名：在阿里云认证官网注册 ACP 人工智能考试',
                 '学习：深入机器学习算法原理和 PAI 平台开发能力',
                 '实验：在 PAI 完成端到端 AI 项目（数据-训练-部署）',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪 AI 前沿技术，学习大模型等新方向'
             ],
@@ -688,9 +689,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'devops',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: 'DevOps 专业级认证，深入考察持续交付流水线与阿里云 DevOps 平台实践。',
             domains: [
@@ -724,7 +725,7 @@
                 '报名：在阿里云认证官网注册 ACP DevOps 考试',
                 '学习：深入 DevOps 理念和云效平台各组件使用',
                 '实验：搭建完整 CI/CD 流水线，集成监控与安全扫描',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：跟踪 DevOps 工具链发展，学习平台工程等新理念'
             ],
@@ -736,9 +737,9 @@
             level: 'acp',
             levelText: 'ACP 专业工程师',
             category: 'llm',
-            duration: '90 分钟',
-            questions: '70 题',
-            passScore: '70 分',
+            duration: '120 分钟',
+            questions: '100 题',
+            passScore: '80 分',
             price: '¥1200',
             description: '大模型专业级认证，深入考察大模型原理、微调与阿里云百炼平台开发。',
             domains: [
@@ -772,7 +773,7 @@
                 '报名：在阿里云认证官网注册 ACP 大模型考试',
                 '学习：深入大模型原理和百炼平台开发能力',
                 '实验：构建 RAG 应用和 Agent，完成模型微调实验',
-                '考试：90 分钟 70 道选择题，70 分通过',
+                '考试：120 分钟 100 道选择题，80 分通过',
                 '领证：获取电子证书，有效期 2 年',
                 '续证：大模型技术迭代迅速，持续关注新模型和新方法'
             ],
@@ -786,9 +787,9 @@
             level: 'ace',
             levelText: 'ACE 高级工程师',
             category: 'cloud',
-            duration: '120 分钟',
-            questions: '80 题',
-            passScore: '80 分',
+            duration: '180 分钟',
+            questions: '61 题',
+            passScore: '90 分',
             price: '¥4800',
             description: '云计算高级架构师认证，考察企业级云架构设计与复杂场景解决方案能力。',
             domains: [
@@ -822,7 +823,7 @@
                 '报名：在阿里云认证官网注册 ACE 云计算考试，支付 ¥4800 考试费',
                 '学习：系统学习企业架构方法论，深入研究大型案例',
                 '实践：主导或参与至少 2 个大型云架构项目，积累实战经验',
-                '考试：120 分钟完成 80 道选择题，80 分通过',
+                '考试：180 分钟完成 61 道选择题，90 分通过',
                 '面试：部分 ACE 认证可能包含架构设计面试环节',
                 '领证：通过后获取高级认证证书，有效期 2 年'
             ],
@@ -834,9 +835,9 @@
             level: 'ace',
             levelText: 'ACE 高级工程师',
             category: 'security',
-            duration: '120 分钟',
-            questions: '80 题',
-            passScore: '80 分',
+            duration: '180 分钟',
+            questions: '61 题',
+            passScore: '90 分',
             price: '¥4800',
             description: '云安全高级架构师认证，考察企业级安全架构设计与安全治理能力。',
             domains: [
@@ -870,7 +871,7 @@
                 '报名：在阿里云认证官网注册 ACE 云安全考试，支付考试费用',
                 '学习：系统学习企业安全架构方法论和合规标准',
                 '实践：主导安全架构设计和合规项目建设',
-                '考试：120 分钟完成 80 道选择题，80 分通过',
+                '考试：180 分钟完成 61 道选择题，90 分通过',
                 '面试：可能包含安全架构设计面试环节',
                 '领证：获取高级认证证书，有效期 2 年'
             ],
@@ -882,9 +883,9 @@
             level: 'ace',
             levelText: 'ACE 高级工程师',
             category: 'database',
-            duration: '120 分钟',
-            questions: '80 题',
-            passScore: '80 分',
+            duration: '180 分钟',
+            questions: '61 题',
+            passScore: '90 分',
             price: '¥4800',
             description: '数据库高级架构师认证，考察企业级数据库架构设计与性能优化能力。',
             domains: [
@@ -918,7 +919,7 @@
                 '报名：在阿里云认证官网注册 ACE 云数据库考试',
                 '学习：系统学习分布式数据库架构和企业级方案设计',
                 '实践：主导大型数据库架构设计和性能优化项目',
-                '考试：120 分钟完成 80 道选择题，80 分通过',
+                '考试：180 分钟完成 61 道选择题，90 分通过',
                 '面试：可能包含数据库架构设计面试环节',
                 '领证：获取高级认证证书，有效期 2 年'
             ],
@@ -930,9 +931,9 @@
             level: 'ace',
             levelText: 'ACE 高级工程师',
             category: 'cloudnative',
-            duration: '120 分钟',
-            questions: '80 题',
-            passScore: '80 分',
+            duration: '180 分钟',
+            questions: '61 题',
+            passScore: '90 分',
             price: '¥4800',
             description: '云原生高级架构师认证，考察企业级云原生架构设计与大规模平台建设能力。',
             domains: [
@@ -966,7 +967,7 @@
                 '报名：在阿里云认证官网注册 ACE 云原生考试',
                 '学习：系统学习企业级云原生架构和平台治理方法',
                 '实践：主导大型云原生平台建设和架构演进',
-                '考试：120 分钟完成 80 道选择题，80 分通过',
+                '考试：180 分钟完成 61 道选择题，90 分通过',
                 '面试：可能包含云原生架构设计面试环节',
                 '领证：获取高级认证证书，有效期 2 年'
             ],
@@ -1153,6 +1154,13 @@
             </a>`
         ).join('');
 
+        // 快速操作：仅已开放练习的方向显示"开始练习 / 模拟考试"
+        const examSupported = EXAM_SUPPORTED.includes(key);
+        const examActionsHTML = examSupported
+            ? `<a href="practice.html?exam=${key}" class="exam-btn-practice" style="display: block; text-align: center; margin-bottom: 12px;">开始练习</a>
+               <a href="practice.html?exam=${key}&mode=exam" class="exam-btn-exam" style="display: block; text-align: center;">模拟考试</a>`
+            : `<div style="text-align: center; padding: 8px 0; color: var(--text-2); font-size: 13px; line-height: 1.8;">该方向题库筹备中<br>可先练习同级别已开放方向</div>`;
+
         app.innerHTML = `
             <section class="cert-detail-header">
                 <div class="container">
@@ -1199,8 +1207,7 @@
 
                             <div class="cert-sidebar-card">
                                 <h4>快速操作</h4>
-                                <a href="practice.html?exam=${key}" class="exam-btn-practice" style="display: block; text-align: center; margin-bottom: 12px;">开始练习</a>
-                                <a href="practice.html?exam=${key}&mode=exam" class="exam-btn-exam" style="display: block; text-align: center;">模拟考试</a>
+                                ${examActionsHTML}
                             </div>
 
                             <div class="cert-sidebar-card">

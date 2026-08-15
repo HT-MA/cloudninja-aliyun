@@ -102,6 +102,7 @@
 <footer id="footer"></footer>
 
 <script src="app.js"></script>
+<script src="exam-config.js"></script>
 <script src="acp-quiz/questions-data.js"></script>
 <script src="questions-bank.js"></script>
 <script>
@@ -109,17 +110,6 @@
  * 云忍者 — 阿里云认证答题系统
  * 支持练习模式（即时反馈）与考试模式（计时统一批改）
  * ============================================================ */
-
-/* ===== 认证元信息 ===== */
-const EXAM_META = {
-    'aca-cloud':       { name: '云计算助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
-    'aca-security':    { name: '云安全助理工程师',        level: 'ACA', qcount: 50,  duration: 60 },
-    'acp-cloud':       { name: '云计算高级工程师',        level: 'ACP', qcount: 50,  duration: 60 },
-    'acp-security':    { name: '云安全高级工程师',        level: 'ACP', qcount: 50,  duration: 60 },
-    'acp-devops':      { name: 'DevOps 高级工程师',       level: 'ACP', qcount: 50,  duration: 60 },
-    'ace-cloud':       { name: '云计算专家工程师',        level: 'ACE', qcount: 50,  duration: 60 },
-    'ace-security':    { name: '云安全专家工程师',        level: 'ACE', qcount: 50,  duration: 60 }
-};
 
 /* ===== 精选题库（手工编写 · 真实阿里云知识点） ===== */
 const ORIGINAL_QUESTIONS = [
@@ -339,6 +329,10 @@ const formatTime = (s) => {
     return `${m}:${sec}`;
 };
 
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[c]));
+
 const isAnswerCorrect = (q, ua) => {
     if (!ua || ua.length === 0) return false;
     if (q.type === '多选题') {
@@ -353,7 +347,24 @@ function init() {
     state.examCode = params.get('exam') || 'aca-cloud';
     state.mode = (params.get('mode') === 'exam') ? 'exam' : 'practice';
 
-    const meta = EXAM_META[state.examCode] || { name: '通用模拟考试', level: 'ACA', qcount: 50, duration: 60 };
+    const meta = EXAM_META[state.examCode];
+
+    // 未知考试方向：给出友好提示，不再静默使用全题库
+    if (!meta) {
+        $('crumbExam').textContent = '未找到考试';
+        $('pageTitle').textContent = '未找到该考试方向';
+        $('examMeta').textContent = `未找到 "${state.examCode}" 对应的考试配置，请从模拟考试列表重新选择。`;
+        $('quizTimer').textContent = '--:--';
+        $('quizTimer').classList.add('no-timer');
+        $('quizNav').style.display = 'none';
+        $('questionArea').innerHTML = `
+            <div class="quiz-empty">
+                <h2>未找到该考试方向</h2>
+                <p>「${esc(state.examCode)}」不存在或尚未开放，请从模拟考试列表中选择已有方向。</p>
+                <a class="quiz-nav-btn primary" href="practice.html">返回模拟考试列表</a>
+            </div>`;
+        return;
+    }
 
     state.questions = getQuestionsForExam(state.examCode, ORIGINAL_QUESTIONS);
     const Qs = state.questions;
@@ -593,6 +604,7 @@ function finishExam(auto) {
 /* ===== 成绩单 ===== */
 function renderResults() {
     const total = state.questions.length;
+    const meta = EXAM_META[state.examCode] || { passScore: 80 };
     let correct = 0, wrong = 0, blank = 0;
     state.questions.forEach((q, i) => {
         const ua = state.userAnswers[i];
@@ -604,14 +616,15 @@ function renderResults() {
 
     const score = Math.round((correct / total) * 100);
     const pct = score;
-    const passed = score >= 80;
+    const passScore = meta.passScore;
+    const passed = score >= passScore;
 
     const r = 90;
     const circ = 2 * Math.PI * r;
     const offset = circ * (1 - pct / 100);
     const ringColor = passed ? 'var(--green)' : (score >= 60 ? 'var(--accent)' : 'var(--red)');
     const verdict = passed
-        ? `恭喜，你的成绩已达到阿里云认证通过线（80 分），继续保持！`
+        ? `恭喜，你的成绩已达到阿里云认证通过线（${passScore} 分），继续保持！`
         : (score >= 60
             ? `成绩接近通过线，再针对薄弱知识点加强练习即可通关。`
             : `成绩未达通过线，建议回到练习模式逐题突破并复习相关官方文档。`);

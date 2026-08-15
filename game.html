@@ -66,7 +66,7 @@
             #gameCanvas { max-width: 100%; height: auto; }
         }
     </style>
-<script>const t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
+<script>const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');</script>
 </head>
 <body>
 
