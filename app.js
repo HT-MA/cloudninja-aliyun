@@ -134,6 +134,7 @@ const footerHTML = `
                 <a href="practice.html?exam=acp-cloud">ACP 云计算</a>
                 <a href="practice.html?exam=acp-security">ACP 云安全</a>
                 <a href="practice.html?exam=acp-devops">ACP DevOps</a>
+                <a href="practice.html?exam=ace-ack">ACE ACK 容器</a>
             </div>
             <div class="footer-col">
                 <h5>认证指南</h5>

@@ -14,7 +14,8 @@ const EXAM_META = {
     'acp-security': { name: '云安全高级工程师', level: 'ACP', qcount: 50, duration: 120, passScore: 80 },
     'acp-devops':   { name: 'DevOps 高级工程师', level: 'ACP', qcount: 50, duration: 120, passScore: 80 },
     'ace-cloud':    { name: '云计算专家工程师', level: 'ACE', qcount: 50, duration: 180, passScore: 90 },
-    'ace-security': { name: '云安全专家工程师', level: 'ACE', qcount: 50, duration: 180, passScore: 90 }
+    'ace-security': { name: '云安全专家工程师', level: 'ACE', qcount: 50, duration: 180, passScore: 90 },
+    'ace-ack':      { name: '容器服务 ACK 专家工程师', level: 'ACE', qcount: 50, duration: 180, passScore: 90 }
 };
 
 /* 当前已开放练习的方向（certifications 详情页据此决定是否显示"开始练习"） */
