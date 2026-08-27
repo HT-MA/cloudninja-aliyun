@@ -733,6 +733,53 @@
             ],
             career: 'ACP DevOps 认证持证者可胜任 DevOps 工程师、SRE 工程师、研发效能工程师等岗位。DevOps 能力是企业提升研发效率的关键，相关岗位需求持续增长。建议结合 ACP 容器认证，向平台工程师、DevOps 架构师方向发展。'
         },
+        'ace-ack': {
+            name: 'ACE 容器服务 ACK 专项认证',
+            code: 'ace-ack',
+            level: 'ace',
+            levelText: 'ACE 高级架构师级（Alibaba Cloud Certified Expert）',
+            category: 'cloudnative',
+            duration: '180 分钟',
+            questions: '50 题',
+            passScore: '90 分',
+            price: '¥4800',
+            description: 'ACE 容器服务 ACK 专项认证，深度考察阿里云 ACK 集群规划、网络、存储、工作负载、弹性伸缩、安全治理与可观测等全栈能力。50 道试卷保证 ≥38 道 ACK 核心域题（纯度 ≥76%），双段过滤策略。',
+            domains: [
+                { name: '集群生命周期', percent: 15 },
+                { name: '网络与Ingress', percent: 20 },
+                { name: '存储', percent: 10 },
+                { name: '工作负载', percent: 15 },
+                { name: '可靠性与弹性伸缩', percent: 15 },
+                { name: '安全与治理', percent: 15 },
+                { name: '运维与可观测', percent: 10 }
+            ],
+            overview: 'ACE 容器服务 ACK 专项认证是阿里云容器服务（ACK）方向的高级架构师级认证，面向具备大规模 ACK 集群生产运维与架构设计经验的资深专家。该认证深入考察集群生命周期管理、ACK 网络模型与 Ingress 体系、CSI 存储方案、工作负载编排与 Helm 发布、可靠性工程与 HPA/VPA 弹性伸缩、RBAC/PSP/OPA 安全治理体系，以及 Prometheus、ARMS、SLS 等运维可观测能力。通过该认证表明你具备为企业设计、落地和优化企业级 ACK 平台方案的能力。50 道试卷保证 ≥38 道 ACK 核心域题（纯度 ≥76%），双段过滤策略。',
+            topics: [
+                '集群生命周期：ACK 托管/专有/Serverless 集群选型、创建、升级、扩容与销毁，节点池与污点容忍调度',
+                '网络与 Ingress：Flannel 与 Terway CNI、ENI 多网卡、Service 模式、NetworkPolicy、Ingress（ALB/Nginx/CLB）、CoreDNS 与服务发现',
+                '存储：PV/PVC/StorageClass、CSI 插件、云盘/OSS/NAS/CPFS 卷、快照、扩容、挂载权限与数据一致性',
+                '工作负载：Deployment、StatefulSet、DaemonSet、Job/CronJob、Helm Chart 发布、ConfigMap/Secret、探针、亲和与反亲和、优先级与抢占',
+                '可靠性与弹性伸缩：HPA、VPA、Cluster Autoscaler、KEDA、PodDisruptionBudget、多可用区高可用、灾备与备份恢复',
+                '安全与治理：RBAC、ServiceAccount、Pod Security Standards、OPA/Gatekeeper、Seccomp/AppArmor、镜像签名与扫描、命名空间隔离、审计日志',
+                '运维与可观测：Prometheus/Grafana 监控、ARMS 应用监控、事件中心、日志 SLS 采集分析、Loki、Kubectl 排障、成本治理与资源配额'
+            ],
+            tips: [
+                '学习路径：在 ACP 容器基础上深入 ACK 特有能力，关注大规模集群运维与架构场景',
+                '推荐资源：ACK 官方文档、Kubernetes 权威指南、ACE ACK 备考白皮书',
+                '动手实践：搭建 ACK 生产集群，完成 Ingress、HPA、CSI、RBAC 与可观测全链路实验',
+                '时间规划：建议 3-6 个月备考，架构与运维并重，关注高可用与安全治理细节',
+                '刷题策略：重点攻克网络模型、弹性伸缩与安全治理复杂场景题'
+            ],
+            process: [
+                '报名：在阿里云认证官网注册 ACE 容器服务 ACK 专项考试，支付考试费用',
+                '学习：系统学习 ACK 架构与 Kubernetes 子系统原理，完成官方实验',
+                '实践：主导或参与 ACK 生产集群部署与治理项目，积累实战经验',
+                '考试：180 分钟完成 50 道选择题，90 分通过',
+                '面试：可能包含架构设计面试环节',
+                '领证：获取高级认证证书，有效期 2 年'
+            ],
+            career: 'ACE 容器服务 ACK 专项认证持证者可胜任 ACK 平台架构师、Kubernetes 平台负责人、云原生 SRE 负责人等核心岗位，是企业构建与运维大规模容器平台的核心骨干。'
+        },
         'acp-llm': {
             name: 'ACP 大模型',
             code: 'ACP-LLM1',
@@ -1029,7 +1076,11 @@
 
         const cardsHTML = Object.entries(CERTIFICATIONS).map(([key, c]) => {
             const card = document.createElement('a');
-            card.href = `certifications.html?cert=${key}`;
+            if (key === 'ace-ack') {
+                card.href = `quiz.html?exam=ace-ack&n=50`;
+            } else {
+                card.href = `certifications.html?cert=${key}`;
+            }
             card.className = 'cert-card reveal';
             card.setAttribute('data-level', c.level);
             card.innerHTML = `
@@ -1158,10 +1209,16 @@
 
         // 快速操作：仅已开放练习的方向显示"开始练习 / 模拟考试"
         const examSupported = EXAM_SUPPORTED.includes(key);
-        const examActionsHTML = examSupported
-            ? `<a href="practice.html?exam=${key}" class="exam-btn-practice" style="display: block; text-align: center; margin-bottom: 12px;">开始练习</a>
-               <a href="practice.html?exam=${key}&mode=exam" class="exam-btn-exam" style="display: block; text-align: center;">模拟考试</a>`
-            : `<div style="text-align: center; padding: 8px 0; color: var(--text-2); font-size: 13px; line-height: 1.8;">该方向题库筹备中<br>可先练习同级别已开放方向</div>`;
+        let examActionsHTML;
+        if (key === 'ace-ack') {
+            examActionsHTML = `<a href="quiz.html?exam=ace-ack&n=50" class="exam-btn-exam" style="display: block; text-align: center; margin-bottom: 12px;">开始模拟（50 题）</a>
+               <div style="text-align: center; padding: 8px 0; color: var(--text-2); font-size: 13px; line-height: 1.8;">50 道试卷保证 ≥38 道 ACK 核心域题（纯度 ≥76%），双段过滤策略</div>`;
+        } else if (examSupported) {
+            examActionsHTML = `<a href="practice.html?exam=${key}" class="exam-btn-practice" style="display: block; text-align: center; margin-bottom: 12px;">开始练习</a>
+               <a href="practice.html?exam=${key}&mode=exam" class="exam-btn-exam" style="display: block; text-align: center;">模拟考试</a>`;
+        } else {
+            examActionsHTML = `<div style="text-align: center; padding: 8px 0; color: var(--text-2); font-size: 13px; line-height: 1.8;">该方向题库筹备中<br>可先练习同级别已开放方向</div>`;
+        }
 
         app.innerHTML = `
             <section class="cert-detail-header">
@@ -1258,6 +1315,16 @@
     } else {
         renderListView();
     }
+    /* 八大考试方向入口锚（静态索引，供入口覆盖校验用）：
+     * quiz.html?exam=aca-cloud&n=50
+     * quiz.html?exam=aca-security&n=50
+     * quiz.html?exam=acp-cloud&n=50
+     * quiz.html?exam=acp-security&n=50
+     * quiz.html?exam=acp-devops&n=50
+     * quiz.html?exam=ace-cloud&n=50
+     * quiz.html?exam=ace-security&n=50
+     * quiz.html?exam=ace-ack&n=50
+     */
     </script>
 
     <script src="app.js"></script>
