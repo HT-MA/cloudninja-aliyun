@@ -43,10 +43,18 @@ function dedupeQuestions(list) {
     return result;
 }
 
-/* RDS 与扩展考点题库为新增的独立题库文件，合并进全局题库 */
+/* RDS、扩展考点、ACP DevOps 专属题库为独立文件，合并进全局题库 */
 const EXTRA_QUESTIONS = []
-    .concat((typeof RDS_QUESTIONS !== 'undefined') ? RDS_QUESTIONS : [])
-    .concat((typeof EXTRA_TOPIC_QUESTIONS !== 'undefined') ? EXTRA_TOPIC_QUESTIONS : []);
+    .concat((typeof RDS_QUESTIONS         !== 'undefined') ? RDS_QUESTIONS         : [])
+    .concat((typeof EXTRA_TOPIC_QUESTIONS !== 'undefined') ? EXTRA_TOPIC_QUESTIONS : [])
+    .concat((typeof DEVOPS_QUESTIONS      !== 'undefined') ? DEVOPS_QUESTIONS      : []);
+
+/* ACP DevOps 双段过滤配置：7 大核心域优先抽 minPrimary 题，不足再用云基础设施域补齐 */
+const DEVOPS_CORE_TOPICS = [
+    '云效DevOps平台', '容器服务ACK', '容器镜像ACR',
+    'IaC与运维编排', '可观测与监控', '发布与部署策略', '微服务与服务治理'
+];
+const DEVOPS_FILL_TOPICS = ['弹性伸缩', '负载均衡SLB', '云计算通用', '云服务器ECS'];
 
 const QUESTION_BANK = dedupeQuestions(
     EXTRA_QUESTIONS.concat(QUESTIONS).map(q => normalizeQ(q))
@@ -57,7 +65,7 @@ const EXAM_MODULES = {
     'aca-security':    ['云安全', '专有网络VPC', '云服务器ECS', '云计算通用'],
     'acp-cloud':       null,
     'acp-security':    ['云安全', '专有网络VPC', '云服务器ECS', '云计算通用'],
-    'acp-devops':      ['弹性伸缩', '负载均衡SLB', '云计算通用', '云服务器ECS'],
+    'acp-devops':      { primary: DEVOPS_CORE_TOPICS, fill: DEVOPS_FILL_TOPICS, minPrimary: 35 },
     'ace-cloud':       null,
     'ace-security':    ['云安全', '专有网络VPC', '云服务器ECS', '云计算通用']
 };
@@ -75,9 +83,39 @@ function getQuestionsForExam(examCode, extraQuestions) {
         ...(extraQuestions || []).map(q => normalizeQ(q)),
         ...QUESTION_BANK
     ]);
-    const modules = EXAM_MODULES[examCode];
-    let pool = modules ? all.filter(q => modules.includes(q.topic)) : all;
-    if (pool.length === 0) pool = all;
-    shuffleArray(pool);
-    return pool.slice(0, Math.min(50, pool.length));
+    const rule = EXAM_MODULES[examCode];
+
+    /* 分支 A：对象格式（双段优先，当前 acp-devops 采用） */
+    if (rule && typeof rule === 'object' && !Array.isArray(rule)) {
+        const primaryPool = shuffleArray(all.filter(q => rule.primary.includes(q.topic)));
+        const fillPool    = shuffleArray(all.filter(q => rule.fill.includes(q.topic)));
+        const needPrimary = Math.min(rule.minPrimary || 0, primaryPool.length, 50);
+        const picked = primaryPool.slice(0, needPrimary);
+        const seen = new Set(picked.map(q => q.question.trim()));
+        for (const q of fillPool) {
+            if (picked.length >= 50) break;
+            const k = q.question.trim();
+            if (seen.has(k)) continue;
+            seen.add(k); picked.push(q);
+        }
+        /* 终极兜底（题库规模极小时，从全库去重补至 50） */
+        for (const q of shuffleArray(all.slice())) {
+            if (picked.length >= 50) break;
+            const k = q.question.trim();
+            if (seen.has(k)) continue;
+            seen.add(k); picked.push(q);
+        }
+        return picked.slice(0, 50);
+    }
+
+    /* 分支 B：数组（单段白名单过滤，沿用原行为） */
+    if (Array.isArray(rule)) {
+        let pool = all.filter(q => rule.includes(q.topic));
+        if (pool.length === 0) pool = all;
+        shuffleArray(pool);
+        return pool.slice(0, Math.min(50, pool.length));
+    }
+
+    /* 分支 C：null（全库随机抽取） */
+    return shuffleArray(all.slice()).slice(0, 50);
 }

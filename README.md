@@ -9,7 +9,7 @@
 - **两种答题模式**：
   - **练习模式**：即时反馈，每题提交后显示正确答案与详细解析
   - **考试模式**：计时答题，统一批改，成绩单可视化（ACA 60 分钟 / ACP 120 分钟 / ACE 180 分钟）
-- **203 道去重题库**：覆盖 ECS、OSS、VPC、RDS、PolarDB、NAS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN、成本优化、Web安全等核心知识点
+- **343 道去重题库**：覆盖 ECS、OSS、VPC、RDS、PolarDB、NAS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN、成本优化、Web安全，及 ACP DevOps 7 大域（云效平台 / 容器服务ACK / 容器镜像ACR / IaC ROS·Terraform·OOS / 可观测 SLS·ARMS·Prometheus / 发布部署策略 / 微服务治理 MSE·ASM）核心知识点
 - **三种题型**：单选题、多选题、判断题
 
 ### 主题切换
@@ -45,9 +45,10 @@ cloudninja-aliyun/
 ├── exam-config.js          # 考试方向统一配置（时长 / 通过线）
 ├── questions-bank.js       # 统一题库加载器（合并 + 去重）
 └── acp-quiz/
-    ├── questions-data.js   # 主题库（160 题）
-    ├── questions-rds.js    # RDS 题库（18 题）
-    └── questions-extra.js  # 扩展考点题库（25 题：NAS/PolarDB/VPC/成本优化/云监控/安全）
+    ├── questions-data.js     # 主题库（160 题）
+    ├── questions-rds.js      # RDS 题库（18 题）
+    ├── questions-extra.js    # 扩展考点题库（25 题：NAS/PolarDB/VPC/成本优化/云监控/安全）
+    └── questions-devops.js   # ACP DevOps 题库（140 题：云效/ACK/ACR/IaC/可观测/发布策略/微服务）
 ```
 
 ## 🚀 快速开始
@@ -69,6 +70,7 @@ python -m http.server 8080
 | ACA 云计算 | `quiz.html?exam=aca-cloud&mode=practice` | `quiz.html?exam=aca-cloud&mode=exam` |
 | ACP 云计算 | `quiz.html?exam=acp-cloud&mode=practice` | `quiz.html?exam=acp-cloud&mode=exam` |
 | ACP 云安全 | `quiz.html?exam=acp-security&mode=practice` | `quiz.html?exam=acp-security&mode=exam` |
+| ACP DevOps 专业工程师 | `quiz.html?exam=acp-devops&mode=practice` | `quiz.html?exam=acp-devops&mode=exam` |
 
 ## 📝 题库说明
 
@@ -79,6 +81,7 @@ python -m http.server 8080
 | `acp-quiz/questions-data.js` | 160 | ECS、SLB、OSS、VPC、云安全、弹性伸缩、CDN、云计算通用 |
 | `acp-quiz/questions-rds.js` | 18 | 云数据库 RDS（2026 大纲新增）：高可用/只读实例/读写分离/备份恢复/DTS/TDE 等 |
 | `acp-quiz/questions-extra.js` | 25 | NAS、PolarDB、经典VsVPC、成本优化、云监控、WAF/DDoS/堡垒机/KMS |
+| `acp-quiz/questions-devops.js` | 140 | 云效 DevOps 平台、容器服务 ACK、容器镜像 ACR、IaC（ROS/Terraform/OOS）、可观测（SLS/ARMS/Prometheus）、发布部署策略、微服务治理（MSE/ASM） |
 | `quiz.html`（内联精选题） | 12 | ECS、OSS、VPC、RDS、SLB、安全组、云监控、弹性伸缩、RAM、NAT 网关、快照 |
 
 `questions-bank.js` 负责合并所有题库并按题目文本自动去重，按认证方向筛选知识点，随机抽取 50 题组成一场考试，确保同一场考试不会出现重复题。
