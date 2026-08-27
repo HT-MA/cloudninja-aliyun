@@ -47,26 +47,36 @@ const EXAMS = [
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
     await page.waitForTimeout(2500);
     const info = await page.evaluate(() => {
-      // 在浏览器上下文里读 state（quiz.html 的内联脚本把它放在全局闭包里不可直接访问，但 progressText 的分母就是总题数）
+      // 读 progressText 的分母（SPA 首屏即显示）
       const pt = document.getElementById('progressText') && document.getElementById('progressText').textContent || '';
-      let m = pt.match(/\s(\d+)\s*$/); // "已答 0 / 50" → 50
+      let m = pt.match(/\s(\d+)\s*$/);
       const totalFromProgress = m ? parseInt(m[1],10) : -1;
-      // 另外，读取 `#examMeta` 显示的题目数
-      const meta = (document.getElementById('examMeta') && document.getElementById('examMeta').innerText) || '';
-      m = meta.match(/共\s*(\d+)\s*题/);
-      const totalFromMeta = m ? parseInt(m[1],10) : -1;
-      // 兜底：题号导航若展开会有 quiz-review-pill
-      const pills = document.querySelectorAll('.quiz-review-pill').length;
-      // 页面全文，用于 metaKeys 命中检查
+      // 读 examMeta 里的题目数
+      const metaEl = document.getElementById('examMeta');
+      const meta = (metaEl && metaEl.innerText) || '';
+      m = meta.match(/共\s*(\d+)\s*题|本场题数：<strong[^>]*>(\d+)/);
+      const totalFromMeta = m ? parseInt(m[1]||m[2],10) : -1;
+      // 兜底：导航 pills 数
+      const pills = document.querySelectorAll('.quiz-review-pill, [data-question-index]').length;
+      // ★ 核心修复：从 SPA 的全局闭包 state 直接拿到 50 题全量
+      //    quiz.html 在顶层定义 const state = {...}；evaluate 上下文可以直接访问
+      let questionsMeta = '';
+      try {
+        if (typeof state !== 'undefined' && Array.isArray(state.questions)) {
+          questionsMeta = state.questions.map(q =>
+            '【' + (q.topic||'') + '】' + (q.question||'') + ' || ' + (q.options||[]).join(' / ')
+          ).join('\n');
+        }
+      } catch (_) { questionsMeta = ''; }
       const bodyText = (document.body && document.body.innerText) || '';
-      return { totalFromProgress, totalFromMeta, pills, meta: meta.slice(0,100), progressText: pt, bodyText };
+      return { totalFromProgress, totalFromMeta, pills, meta: meta.slice(0,100), progressText: pt, bodyText, questionsMeta };
     });
-    // metaKeys 命中检查
-    const bodyText = info.bodyText || '';
+    // metaKeys 命中：在 bodyText + questionsMeta（= 全 50 题的 topic+题干）上做包含匹配
+    const haystack = (info.bodyText || '') + '\n' + (info.questionsMeta || '');
     let matched = 0;
     const matchedKeys = [];
     for (const k of metaKeys) {
-      if (bodyText.indexOf(k) !== -1) { matched++; matchedKeys.push(k); }
+      if (haystack.indexOf(k) !== -1) { matched++; matchedKeys.push(k); }
     }
     const metaTotal = metaKeys.length;
     const metaThreshold = Math.floor(metaTotal * 0.6);
