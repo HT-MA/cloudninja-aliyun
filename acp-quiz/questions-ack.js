@@ -672,9 +672,9 @@ const ACK_QUESTIONS = [
     },
     { id:'aceack_hpa10', module:'可靠性与弹性伸缩', type:'multi',
       question:'HPA v2 支持 Resource / Pods / Object / External 四类 Metrics 来源。以下哪些指标 → 类型的匹配是官方推荐的？',
-      options:['Pod 平均 CPU 使用率：type: Resource、name: cpu','Nginx Ingress QPS（自定义指标，每个 Pod 一个值然后按副本聚合）：type: Pods','RocketMQ 消费组 Lag（不在 Pod / K8s Object 上，来自外部系统）：type: External','某 Ingress 对象的连接数单值：type: Object（target: Ingress/xxx）'],
-      answer:[0,1,2,3],
-      explanation:'A. 平均 CPU 使用率是 HPA 最常用的 Resource 指标，正确。B. per-Pod 聚合的指标（如 ingress 请求数、业务 TPS）匹配 Pods 类型，正确。C. MQ Lag 等非 K8s 对象/非 Pod 指标属于 External，正确。D. 单个 K8s 资源对象（如 Ingress/Service）的单值指标对应 Object 类型（target: apiVersion/kind/name），正确。四项均符合官方 HPA 指标分类。',
+      options:['Pod 平均 CPU 使用率：type: Resource、name: cpu','Nginx Ingress QPS（自定义指标，每个 Pod 一个值然后按副本聚合）：type: Pods','RocketMQ 消费组 Lag（不在 Pod / K8s Object 上，来自外部系统）：type: External','某 Ingress 对象的连接数单值：type: Pods（describeMetric.target: Ingress/xxx）'],
+      answer:[0,1,2],
+      explanation:'A. 平均 CPU 使用率是 HPA 最常用的 Resource 指标，正确。B. per-Pod 聚合的指标（如 ingress 请求数、业务 TPS）匹配 Pods 类型，正确。C. MQ Lag 等非 K8s 对象/非 Pod 指标属于 External，正确。D. 单个 K8s 资源对象（如 Ingress/Service）的单值指标对应 Object 类型（target: apiVersion/kind/name），本题写成 Pods 类型会因缺失 Pod 上下文而无法匹配，错误。',
       ref:'help.aliyun.com/zh/ack/kubernetes/user-guide/hpa-autoscaling-based-on-custom-metrics'
     },
     { id:'aceack_hpa11', module:'可靠性与弹性伸缩', type:'multi',
