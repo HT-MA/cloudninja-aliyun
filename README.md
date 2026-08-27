@@ -5,11 +5,16 @@
 ## ✨ 功能特性
 
 ### 模拟考试系统
-- **7 个认证方向**：ACA（云计算 / 云安全）、ACP（云计算 / 云安全 / DevOps）、ACE（云计算 / 云安全）
+- **8 个认证方向**：ACA（云计算 / 云安全）、ACP（云计算 / 云安全 / DevOps）、ACE（云计算 / 云安全 / 容器服务 ACK 专项）
 - **两种答题模式**：
   - **练习模式**：即时反馈，每题提交后显示正确答案与详细解析
   - **考试模式**：计时答题，统一批改，成绩单可视化（ACA 60 分钟 / ACP 120 分钟 / ACE 180 分钟）
-- **343 道去重题库**：覆盖 ECS、OSS、VPC、RDS、PolarDB、NAS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN、成本优化、Web安全，及 ACP DevOps 7 大域（云效平台 / 容器服务ACK / 容器镜像ACR / IaC ROS·Terraform·OOS / 可观测 SLS·ARMS·Prometheus / 发布部署策略 / 微服务治理 MSE·ASM）核心知识点
+- **483 道去重题库**：覆盖 ECS、OSS、VPC、RDS、PolarDB、NAS、SLB、安全组、弹性伸缩、RAM、NAT 网关、云监控、CDN、成本优化、Web安全，及 ACP DevOps 7 大域、ACE ACK 7 大域核心知识点
+
+| 专项 | 题数 | 说明 |
+|------|------|------|
+| 新增 ACP DevOps | 140 题 | 云效平台 / 容器服务 ACK / 容器镜像 ACR / IaC / 可观测 / 发布部署策略 / 微服务治理 |
+| 新增 ACE ACK 容器服务专项 | 140 题 | 双段过滤保证纯度 ≥76%（38/50） |
 - **三种题型**：单选题、多选题、判断题
 
 ### 主题切换
@@ -48,7 +53,8 @@ cloudninja-aliyun/
     ├── questions-data.js     # 主题库（160 题）
     ├── questions-rds.js      # RDS 题库（18 题）
     ├── questions-extra.js    # 扩展考点题库（25 题：NAS/PolarDB/VPC/成本优化/云监控/安全）
-    └── questions-devops.js   # ACP DevOps 题库（140 题：云效/ACK/ACR/IaC/可观测/发布策略/微服务）
+    ├── questions-devops.js   # ACP DevOps 题库（140 题：云效/ACK/ACR/IaC/可观测/发布策略/微服务）
+    └── questions-ack.js      — ACE 容器服务 ACK 专项题库（7 域，140 题）
 ```
 
 ## 🚀 快速开始
@@ -71,8 +77,20 @@ python -m http.server 8080
 | ACP 云计算 | `quiz.html?exam=acp-cloud&mode=practice` | `quiz.html?exam=acp-cloud&mode=exam` |
 | ACP 云安全 | `quiz.html?exam=acp-security&mode=practice` | `quiz.html?exam=acp-security&mode=exam` |
 | ACP DevOps 专业工程师 | `quiz.html?exam=acp-devops&mode=practice` | `quiz.html?exam=acp-devops&mode=exam` |
+| ACE ACK 容器服务专项 | `quiz.html?exam=ace-ack&mode=practice` | `quiz.html?exam=ace-ack&mode=exam` |
+
+- ACE ACK 容器服务专项：quiz.html?exam=ace-ack&n=50
 
 ## 📝 题库说明
+
+### 题库构成矩阵（按认证方向）
+
+| 认证专项 | 题数 | 知识域分布 | 纯度说明 |
+|---------|------|-----------|---------|
+| ACP DevOps 专业工程师 (acp-devops) | 140 道 | 7 域（云效/ACK/ACR/IaC/可观测/发布策略/微服务治理） | — |
+| ACE 容器服务专项 (ace-ack) | 140 道 | 7 域（life/net/store/work/hpa/sec/ops） | ≥38/50 核心题，纯度≥76% |
+
+### 题库源文件清单
 
 题库数据位于以下文件中：
 
@@ -82,6 +100,7 @@ python -m http.server 8080
 | `acp-quiz/questions-rds.js` | 18 | 云数据库 RDS（2026 大纲新增）：高可用/只读实例/读写分离/备份恢复/DTS/TDE 等 |
 | `acp-quiz/questions-extra.js` | 25 | NAS、PolarDB、经典VsVPC、成本优化、云监控、WAF/DDoS/堡垒机/KMS |
 | `acp-quiz/questions-devops.js` | 140 | 云效 DevOps 平台、容器服务 ACK、容器镜像 ACR、IaC（ROS/Terraform/OOS）、可观测（SLS/ARMS/Prometheus）、发布部署策略、微服务治理（MSE/ASM） |
+| `acp-quiz/questions-ack.js` | 140 | ACE 容器服务专项 (ace-ack)：7 域（life/net/store/work/hpa/sec/ops），≥38/50 核心题，纯度≥76% |
 | `quiz.html`（内联精选题） | 12 | ECS、OSS、VPC、RDS、SLB、安全组、云监控、弹性伸缩、RAM、NAT 网关、快照 |
 
 `questions-bank.js` 负责合并所有题库并按题目文本自动去重，按认证方向筛选知识点，随机抽取 50 题组成一场考试，确保同一场考试不会出现重复题。
