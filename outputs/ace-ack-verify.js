@@ -29,7 +29,7 @@
  *   注：acp-quiz/questions-ack.js 在 RED 阶段不存在，因此 T1 必然 FAIL。
  *   用法：node outputs/ace-ack-verify.js
  *   通过：退出码 0 并打印 "✅ PASSED 全部 6 类断言通过"
- *   失败：打印首条 FAIL 原因并立即 process.exit(1)
+ *   失败：聚合打印全部失败项并 process.exit(1)
  */
 
 'use strict';
@@ -149,14 +149,7 @@ function pickForExam(all, rule) {
     const fillPool    = shuffle(all.filter(q => rule.fill.includes(q.topic)));
     const needPrimary = Math.min(rule.minPrimary || 0, primaryPool.length, 50);
     const picked = primaryPool.slice(0, needPrimary);
-    const seen   = new Set(picked.map(q => String(q.question || '').trim()));
-    // 用 primaryPool 剩余继续补（补到 minPrimary 之后若 primary 还有剩，优先主域）
-    for (let i = needPrimary; i < primaryPool.length && picked.length < 50; i++) {
-      const q = primaryPool[i];
-      const k = String(q.question || '').trim();
-      if (seen.has(k)) continue;
-      seen.add(k); picked.push(q);
-    }
+    const seen = new Set(picked.map(q => String(q.question || '').trim()));
     for (const q of fillPool) {
       if (picked.length >= 50) break;
       const k = String(q.question || '').trim();
