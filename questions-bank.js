@@ -43,7 +43,14 @@ function dedupeQuestions(list) {
     return result;
 }
 
-const QUESTION_BANK = dedupeQuestions(QUESTIONS.map(q => normalizeQ(q)));
+/* RDS 与扩展考点题库为新增的独立题库文件，合并进全局题库 */
+const EXTRA_QUESTIONS = []
+    .concat((typeof RDS_QUESTIONS !== 'undefined') ? RDS_QUESTIONS : [])
+    .concat((typeof EXTRA_TOPIC_QUESTIONS !== 'undefined') ? EXTRA_TOPIC_QUESTIONS : []);
+
+const QUESTION_BANK = dedupeQuestions(
+    EXTRA_QUESTIONS.concat(QUESTIONS).map(q => normalizeQ(q))
+);
 
 const EXAM_MODULES = {
     'aca-cloud':       null,

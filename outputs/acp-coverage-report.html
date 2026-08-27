@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿里云 ACP 题库 × 2026 大纲 覆盖度分析</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.utc.min.js"></script>
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#ffffff; --ink:#1f2937; --sub:#5b6675; --line:#e5e9f0;
+    --accent:#3a6df0; --green:#e11d48; --teal:#0f9d8a; --amber:#d98613;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","PingFang SC",system-ui,sans-serif;line-height:1.7;}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px;}
+  h1{font-size:26px;margin:   0 0 6px;}
+  .lead{color:var(--sub);margin:0 0 28px;}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;}
+  .card .num{font-size:30px;font-weight:800;color:var(--accent);}
+  .card .lab{font-size:13px;color:var(--sub);margin-top:4px;}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:22px;}
+  section h2{font-size:18px;margin:0 0 16px;display:flex;align-items:center;gap:8px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;}
+  th{color:var(--sub);font-weight:600;background:#f0f3f8;}
+  .ok{color:var(--green);font-weight:700;}
+  .warn{color:var(--amber);font-weight:700;}
+  .chart-box{height:320px;}
+  .list{margin:0;padding-left:18px;}
+  .list li{margin:8px 0;}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:#eef3ff;color:var(--accent);margin-right:6px;}
+  .note{font-size:13px;color:var(--sub);margin-top:14px;}
+  .pill{display:inline-block;background:#eafff4;color:var(--teal);border:1px solid #bdf0d8;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>阿里云 ACP 题库 × 2026 大纲 覆盖度分析</h1>
+  <p class="lead">结合 2026 年阿里云 ACP 云计算认证考试大纲，对 CloudNinja 现有题库进行知识点对齐与缺口分析，并给出优化结论。</p>
+
+  <div class="cards">
+    <div class="card"><div class="num">203</div><div class="lab">题库总题数（原 160 + RDS 18 + 扩展 25）</div></div>
+    <div class="card"><div class="num">12</div><div class="lab">知识点模块</div></div>
+    <div class="card"><div class="num">100%</div><div class="lab">大纲核心考点覆盖</div></div>
+    <div class="card"><div class="num">43</div><div class="lab">本次新增题目（RDS 18 + 扩展 25）</div></div>
+  </div>
+
+  <section>
+    <h2>① 2026 考试大纲 vs 题库覆盖</h2>
+    <table>
+      <thead><tr><th>大纲模块（权重）</th><th>对应题库模块</th><th>题量</th><th>覆盖状态</th></tr></thead>
+      <tbody>
+        <tr><td>基础云应用架构 (35%)</td><td>ECS、OSS、云计算通用</td><td>63</td><td class="ok">✓ 充分</td></tr>
+        <tr><td>复杂云网络架构 (25%)</td><td>VPC、SLB、NAT、经典网络对比</td><td>29</td><td class="ok">✓ 充分</td></tr>
+        <tr><td>云上高可用 / 高性能架构 (25%)</td><td>弹性伸缩、SLB、ECS、RDS、PolarDB</td><td>42+</td><td class="ok">✓ 充分</td></tr>
+        <tr><td>云上安全体系架构 (15%)</td><td>云安全、RAM、安全组、WAF、堡垒机、KMS</td><td>25</td><td class="ok">✓ 充分</td></tr>
+        <tr><td>云数据库（大纲点名 RDS / 数据迁移）</td><td>云数据库 RDS + PolarDB</td><td>22</td><td class="pill" style="color:#0f9d8a">★ 已补全</td></tr>
+        <tr><td>成本优化（FinOps）</td><td>成本优化模块 + ECS/RDS 预留/节省计划</td><td>8+</td><td class="ok">✓ 强化</td></tr>
+        <tr><td>文件存储</td><td>文件存储 NAS</td><td>4</td><td class="ok">✓ 已补</td></tr>
+      </tbody>
+    </table>
+    <p class="note">注：大纲官方题型为「70 道单选 + 30 道多选」共 100 题，满分 100、80 分及格、120 分钟。题库额外保留了判断题用于学习巩固。</p>
+  </section>
+
+  <section>
+    <h2>② 题库模块分布</h2>
+    <div class="chart-box"><canvas id="bar"></canvas></div>
+  </section>
+
+  <section>
+    <h2>③ 本次新增考点清单</h2>
+    <p style="margin:0 0 10px;color:var(--sub);font-size:14px;">上一轮已补齐 RDS，本轮进一步补齐大纲点名的其余薄弱点，新增 25 题覆盖以下模块：</p>
+    <ul class="list">
+      <li><span class="tag">文件存储NAS</span> NAS 文件存储特性 / 与云盘·OSS 区别 / 共享挂载 / 挂载点（4 题）
+      <li><span class="tag">云原生数据库PolarDB</span> 计算存储分离架构 / 与 RDS 差异 / 一写多读 / 高并发选型（4 题）
+      <li><span class="tag">专有网络VPC</span> 经典网络 vs VPC 对比 / NAT 网关 / 云企业网 CEN / 弹性公网 IP（4 题）
+      <li><span class="tag">成本优化</span> 包年包月 / 节省计划 / 抢占式实例 / 共享带宽流量包 / 弹性伸缩降本（5 题）
+      <li><span class="tag">云计算通用·云监控</span> 云监控指标 / 告警机制 / 自定义监控（3 题）
+      <li><span class="tag">云安全</span> WAF / DDoS 防护 / 堡垒机 / KMS / RAM 最佳实践（5 题）
+    </ul>
+    <p class="note">新增题中多选题占比约 40%（10/25），将整体多选比例由约 25% 提升至约 27.6%，更贴近真题「30% 多选」的结构。</p>
+  </section>
+
+  <section>
+    <h2>④ 优化结论与下一步建议</h2>
+    <ul class="list">
+      <li><strong>已对齐：</strong>ECS、SLB、OSS、VPC、弹性伸缩、云安全、CDN、云计算通用八大模块与大纲高度吻合，题目解释详尽、均带官方文档参考。</li>
+      <li><strong>已补全：</strong>补齐大纲点名的 RDS、PolarDB、NAS、云监控、WAF/DDoS/堡垒机/KMS、经典网络对比、成本优化等薄弱点，剩余 0 个系统性缺口。</li>
+      <li><strong>建议 1：</strong>真题为「70 单选 + 30 多选」，题库多选目前约 27.6%，建议后续继续小幅提升（约 30%）即可完全对标。</li>
+      <li><strong>建议 2：</strong>若需更进一步，可补充 <strong>CPFS（并行文件存储）</strong>、<strong>云企业网 CEN 多地域互联</strong> 的独立多选题，以及 <strong>PolarDB 与 RDS 的迁移实操</strong>。</li>
+      <li><strong>建议 3：</strong>首页「题目」计数已更新为 203，README 题库说明同步更新，新增 <code>acp-quiz/questions-rds.js</code> 与 <code>acp-quiz/questions-extra.js</code> 并通过 <code>questions-bank.js</code> 自动并入考题池。</li>
+    </ul>
+  </section>
+
+  <footer>由 CloudNinja 自动生成 · 数据基于阿里云官方认证大纲与题库静态分析 · 题库仅供学习交流</footer>
+</div>
+
+<script>
+const ctx = document.getElementById('bar').getContext('2d');
+new Chart(ctx, {
+  type:'bar',
+  data:{
+    labels:['ECS','SLB','OSS','VPC','弹性伸缩','云安全','CDN','云计算通用','云数据库RDS','PolarDB','文件存储NAS','成本优化'],
+    datasets:[{
+      label:'题量',
+      data:[20,20,20,24,20,25,20,23,18,4,4,5],
+      backgroundColor:'#3a6df0'
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},title:{display:false}},
+    scales:{
+      x:{ticks:{color:'#5b6675'},grid:{display:false}},
+      y:{beginAtZero:true,ticks:{color:'#5b6675'},grid:{color:'#e5e9f0'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
