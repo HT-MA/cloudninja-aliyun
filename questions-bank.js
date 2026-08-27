@@ -47,7 +47,8 @@ function dedupeQuestions(list) {
 const EXTRA_QUESTIONS = []
     .concat((typeof RDS_QUESTIONS         !== 'undefined') ? RDS_QUESTIONS         : [])
     .concat((typeof EXTRA_TOPIC_QUESTIONS !== 'undefined') ? EXTRA_TOPIC_QUESTIONS : [])
-    .concat((typeof DEVOPS_QUESTIONS      !== 'undefined') ? DEVOPS_QUESTIONS      : []);
+    .concat((typeof DEVOPS_QUESTIONS      !== 'undefined') ? DEVOPS_QUESTIONS      : [])
+    .concat((typeof ACK_QUESTIONS         !== 'undefined') ? ACK_QUESTIONS         : []);
 
 /* ACP DevOps 双段过滤配置：7 大核心域优先抽 minPrimary 题，不足再用云基础设施域补齐 */
 const DEVOPS_CORE_TOPICS = [
@@ -55,6 +56,10 @@ const DEVOPS_CORE_TOPICS = [
     'IaC与运维编排', '可观测与监控', '发布与部署策略', '微服务与服务治理'
 ];
 const DEVOPS_FILL_TOPICS = ['弹性伸缩', '负载均衡SLB', '云计算通用', '云服务器ECS'];
+
+/* ACE ACK 双段过滤配置：7 大核心域优先抽 minPrimary 题，不足再用云基础设施域补齐 */
+const ACK_CORE_TOPICS = ['集群生命周期','网络与Ingress','存储','工作负载','可靠性与弹性伸缩','安全与治理','运维与可观测'];
+const ACK_FILL_TOPICS = ['弹性伸缩','负载均衡SLB','云计算通用','云服务器ECS','专有网络VPC','云数据库RDS','容器服务ACK','云效DevOps平台'];
 
 const QUESTION_BANK = dedupeQuestions(
     EXTRA_QUESTIONS.concat(QUESTIONS).map(q => normalizeQ(q))
@@ -68,6 +73,11 @@ const EXAM_MODULES = {
     'acp-devops':      { primary: DEVOPS_CORE_TOPICS, fill: DEVOPS_FILL_TOPICS, minPrimary: 35 },
     'ace-cloud':       null,
     'ace-security':    ['云安全', '专有网络VPC', '云服务器ECS', '云计算通用']
+};
+EXAM_MODULES['ace-ack'] = {
+  primary: ACK_CORE_TOPICS,
+  fill: ACK_FILL_TOPICS,
+  minPrimary: 38
 };
 
 function shuffleArray(arr) {
